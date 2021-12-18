@@ -1,11 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Gokart_Laptime.Models;
+using Gokart_Laptime.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gokart_Laptime.Controllers
 {
     public class UserController : Controller
     {
+        private UserDAO userDAO;
         // GET: UserController
+        public UserController(IConfiguration configuration)
+        {
+            userDAO = new UserDAO(configuration);
+        }
         public ActionResult Index()
         {
             return View();
@@ -18,7 +25,7 @@ namespace Gokart_Laptime.Controllers
         }
 
         // GET: UserController/Create
-        public ActionResult Create()
+        public ActionResult Register()
         {
             return View();
         }
@@ -26,10 +33,18 @@ namespace Gokart_Laptime.Controllers
         // POST: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Register(UserRegisterViewModel userRegistrationViewModel)
         {
             try
             {
+                if (userDAO.RegisteredEmail(userRegistrationViewModel.Email)) ModelState.AddModelError("Email", "This email address is already in use!");
+
+                if (userDAO.UsernameAlreadyInUse(userRegistrationViewModel.UserName)) ModelState.AddModelError("UserName", "This username is already in use! Please select another one!");
+
+                if (!ModelState.IsValid) return View(userRegistrationViewModel);
+
+                userDAO.RegisterUser(userRegistrationViewModel);
+
                 return RedirectToAction(nameof(Index));
             }
             catch

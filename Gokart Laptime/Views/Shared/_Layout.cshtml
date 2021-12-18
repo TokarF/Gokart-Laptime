@@ -13,7 +13,7 @@
 <body class="bg-dark text-light">
      
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-md-none fixed-top">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-md-none sticky-top">
     <div class="container-fluid">
       <a class="navbar-brand text-danger" href="#">
         <i class="fas fa-stopwatch-20"></i>
@@ -54,7 +54,10 @@
                     </a>
                     <ul class="nav nav-pills flex-sm-column flex-row flex-nowrap flex-shrink-1 flex-sm-grow-0 flex-grow-1 mb-sm-auto mb-0 justify-content-center align-items-center align-items-sm-start" id="menu">
                         <li class="nav-item flex-grow-1">
-                            <a href="#" class="nav-link px-sm-0 px-2 text-light">Home</a>
+                            <a asp-controller="User" asp-action="Register" class="nav-link px-sm-0 px-2 text-light">Registration</a>
+                        </li>
+                            <li class="nav-item flex-grow-1">
+                            <a asp-controller="User" asp-action="Login" class="nav-link px-sm-0 px-2 text-light">Login</a>
                         </li>
                     </ul>
                 </div>
@@ -62,7 +65,7 @@
 
             <div class="col d-flex flex-column h-sm-100">
                 <main class="row overflow-auto">
-                    <div class="col pt-4 px-2 px-sm-5">
+                    <div class="col pt-2 px-2 px-md-5">
                         @RenderBody()
                     </div>
                 </main>
