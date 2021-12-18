@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Newtonsoft.Json
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,44 +7,52 @@
     <title>@ViewData["Title"] - Gokart_Laptime</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css~/css/style.css" asp-append-version="true" />
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+          integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="bg-dark text-light">
-     
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-md-none sticky-top">
-    <div class="container-fluid">
-      <a class="navbar-brand text-danger" href="#">
-        <i class="fas fa-stopwatch-20"></i>
-        <span class="">LAPTIME</span>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
-        aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-          </li>
-        </ul>
-        <form class="d-flex">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-      </div>
-    </div>
-  </nav>
 
-  
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-md-none sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand text-danger" href="#">
+                <i class="fas fa-stopwatch-20"></i>
+                <span class="">LAPTIME</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02"
+                    aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#"><i class="fas fa-user-alt me-2"></i>@User.Identity.Name</a>
+                        </li>
+                        <li class="nav-item">
+                            <form action="/User/Logout" method="post">
+                                <a onclick="event.target.parentNode.submit();" href="#" class="nav-link "><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><i class="fas fa-user-plus me-2"></i>Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><i class="fas fa-sign-in-alt me-2"></i> Login</a>
+                        </li>
+
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
     <div class="container-fluid overflow-hidden">
         <div class="row vh-100 overflow-auto">
             <div class="col-12  col-sm-3 col-xl-2 px-sm-2 px-0 bg-dark d-none d-md-flex sticky-top border-end border-secondary">
@@ -53,12 +62,28 @@
                         <span class="">LAPTIME</span>
                     </a>
                     <ul class="nav nav-pills flex-sm-column flex-row flex-nowrap flex-shrink-1 flex-sm-grow-0 flex-grow-1 mb-sm-auto mb-0 justify-content-center align-items-center align-items-sm-start" id="menu">
-                        <li class="nav-item flex-grow-1">
-                            <a asp-controller="User" asp-action="Register" class="nav-link px-sm-0 px-2 text-light">Registration</a>
-                        </li>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
                             <li class="nav-item flex-grow-1">
-                            <a asp-controller="User" asp-action="Login" class="nav-link px-sm-0 px-2 text-light">Login</a>
-                        </li>
+                                <a class="nav-link px-sm-0 px-2 text-light disabled"><i class="fas fa-user-alt me-2"></i>@User.Identity.Name</a>
+                            </li>
+                            <li class="nav-item flex-grow-1">
+                                <form action="/User/Logout" method="post">
+                                    <a onclick="event.target.parentNode.submit();" href="#" class="nav-link px-sm-0 px-2 text-light"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item flex-grow-1">
+                                <a asp-controller="User" asp-action="Register" class="nav-link px-sm-0 px-2 text-light"><i class="fas fa-user-plus me-2"></i>Register</a>
+                            </li>
+                            <li class="nav-item flex-grow-1">
+                                <a asp-controller="User" asp-action="Login" class="nav-link px-sm-0 px-2 text-light"><i class="fas fa-sign-in-alt me-2"></i> Login</a>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             </div>
@@ -66,13 +91,22 @@
             <div class="col d-flex flex-column h-sm-100">
                 <main class="row overflow-auto">
                     <div class="col pt-2 px-2 px-md-5">
+                        @if (ViewBag.Information is not null)
+                        {
+                            ViewBag.Information = JsonConvert.DeserializeObject<dynamic>((string)ViewBag.Information);
+                            <div class="alert alert-@ViewBag.Information.Type alert-dismissible fade show mt-3" role="alert">
+                                @ViewBag.Information.Message
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
                         @RenderBody()
                     </div>
                 </main>
             </div>
         </div>
     </div>
- 
+
 
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

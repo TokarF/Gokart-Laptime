@@ -1,0 +1,40 @@
+﻿@model Gokart_Laptime.Models.UserLoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1 class="text-md-center">Login</h1>
+<hr />
+
+<form asp-action="Login" class="row g-2 justify-content-md-center">
+    <div class="col-md-8 col-xl-6">
+        <label asp-for="Email" class="mb-2"></label>
+        <input asp-for="Email" class="form-control mb-2 bg-dark text-white" placeholder="Enter an email">
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    
+    <div class="w-100"></div>
+
+    <div class="col-md-8 col-xl-6">
+        <label asp-for="Password" class="mb-2"></label>
+        <input asp-for="Password" class="form-control mb-2 bg-dark text-white" placeholder="Enter a password">
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="w-100"></div>
+
+    <div class="col-md-8 col-xl-6">
+        <button type="submit" class="w-100 btn btn-outline-success"><i class="fas fa-sign-in-alt me-2"></i>Login</button>
+    </div>
+
+    <div class="w-100"></div>
+
+    <div class="col-md-8 col-xl-6">
+        <a asp-action="Register" class="w-100 btn btn-outline-primary"><i class="fas fa-user-plus me-2"></i>Register</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

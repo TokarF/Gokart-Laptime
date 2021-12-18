@@ -1,4 +1,5 @@
 ﻿using Gokart_Laptime.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -13,8 +14,10 @@ namespace Gokart_Laptime.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
+            ViewBag.Information = TempData["Information"];
             return View();
         }
 
