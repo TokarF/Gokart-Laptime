@@ -12,7 +12,7 @@ namespace Gokart_Laptime.Controllers
 {
     public class UserController : Controller
     {
-        private UserDAO userDAO;
+        private readonly UserDAO userDAO;
         // GET: UserController
         public UserController(IConfiguration configuration)
         {
@@ -91,6 +91,7 @@ namespace Gokart_Laptime.Controllers
                         new Claim(ClaimTypes.Sid, user.UserId.ToString()),
                         new Claim(ClaimTypes.Name, user.UserName),
                         new Claim(ClaimTypes.Email, user.Email),
+                        new Claim(type: "RegisteredAt", user.RegisteredAt.ToString()),
                     };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -118,26 +119,8 @@ namespace Gokart_Laptime.Controllers
             return View(nameof(Login));
         }
 
-        // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
 
-        // POST: UserController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+
 
         // GET: UserController/Delete/5
         public ActionResult Delete(int id)

@@ -26,6 +26,7 @@ namespace Gokart_Laptime.Models
 
         [Display(Name = "Registered at")]
         [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime RegisteredAt { get; set; }
 
 
