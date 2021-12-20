@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 
 namespace Gokart_Laptime.Services
 {
-    public class UserDAO
+    public class UserDAO : IUserDAO
     {
         private string connectionString;
         public UserDAO(IConfiguration configuration)

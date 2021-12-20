@@ -4,6 +4,7 @@ namespace Gokart_Laptime.Models
 {
     public class RaceTrackModel
     {
+        [Key]
         [Display(Name = "#")]
         [DisplayFormat(DataFormatString = "{0:000}", ApplyFormatInEditMode = true)]
         public int RaceTrackId { get; set; }
@@ -18,7 +19,7 @@ namespace Gokart_Laptime.Models
         [Display(Name = "Length")]
         [Required(ErrorMessage = "The racetrack length is required")]
         [Range(minimum: 100, maximum: 5000, ErrorMessage = "The racetrack length has to be between 100 - 5000")]
-        [DisplayFormat(DataFormatString = "{0,4} m", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0,4} m")]
         public int Length { get; set; }
 
         [Display(Name = "Address")]
@@ -28,7 +29,7 @@ namespace Gokart_Laptime.Models
         public string Address { get; set; }
 
         [Display(Name = "Description")]
-        [DataType(DataType.Text)]
+        [DataType(DataType.MultilineText)]
         [StringLength(300, MinimumLength = 10, ErrorMessage = "The racetrack description has to be between 10 - 300 charaters")]
         [DisplayFormat(NullDisplayText = "N/A")]
         public string? Description { get; set; }

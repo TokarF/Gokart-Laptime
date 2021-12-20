@@ -1,3 +1,5 @@
+using Gokart_Laptime.Controllers;
+using Gokart_Laptime.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +22,9 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+builder.Services.AddSingleton<IUserDAO, UserDAO>();
+builder.Services.AddSingleton<IRaceTrackDAO, RaceTrackDAO>();
 
 builder.Services.AddHttpContextAccessor();
 

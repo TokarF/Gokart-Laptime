@@ -12,11 +12,11 @@ namespace Gokart_Laptime.Controllers
 {
     public class UserController : Controller
     {
-        private readonly UserDAO userDAO;
+        private readonly IUserDAO userDAO;
         // GET: UserController
-        public UserController(IConfiguration configuration)
+        public UserController(IUserDAO userDAO)
         {
-            userDAO = new UserDAO(configuration);
+            this.userDAO = userDAO;
         }
         public ActionResult Index()
         {

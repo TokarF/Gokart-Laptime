@@ -1,16 +1,18 @@
 ﻿using Gokart_Laptime.Models;
+using Gokart_Laptime.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Gokart_Laptime.Controllers
 {
     public class RaceTrackController : Controller
     {
-        private readonly RaceTrackDAO raceTrackDAO;
-        public RaceTrackController(IConfiguration configuration)
+        private readonly IRaceTrackDAO raceTrackDAO;
+        public RaceTrackController(IRaceTrackDAO raceTrackDAO)
         {
-            raceTrackDAO = new RaceTrackDAO(configuration);
+            this.raceTrackDAO = raceTrackDAO;
         }
         // GET: RaceTrackController
         [Authorize]
@@ -20,6 +22,7 @@ namespace Gokart_Laptime.Controllers
             try
             {
                 List<RaceTrackModel> raceTracks = raceTrackDAO.GetAllRaceTracks();
+                ViewBag.Information = TempData["Information"];
                 return View(raceTracks);
             }
             catch (Exception)
@@ -44,11 +47,23 @@ namespace Gokart_Laptime.Controllers
         // POST: RaceTrackController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(RaceTrackModel raceTrack)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (!ModelState.IsValid) return View(raceTrack);
+
+                if (raceTrackDAO.AddRaceTrack(raceTrack) == -1)
+                {
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Sorry, something went wrond, couldn't add racetrack!" });
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "RaceTrack has been successfully added!" });
+                    return RedirectToAction(nameof(Index));
+                }
+
             }
             catch
             {
@@ -59,17 +74,37 @@ namespace Gokart_Laptime.Controllers
         // GET: RaceTrackController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            RaceTrackModel raceTrack = raceTrackDAO.GetRaceTrackById(id);
+            if (raceTrack is not null)
+            {
+                return View(raceTrack);
+            }
+            else
+            {
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Racetrack is not found!" });
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: RaceTrackController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(RaceTrackModel raceTrack)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (!ModelState.IsValid) return View(raceTrack);
+                if (raceTrackDAO.UpdateRaceTrack(raceTrack))
+                {
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "RaceTrack has been successfully updated!" });
+                    return RedirectToAction(nameof(Index));
+
+                }
+                else
+                {
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Sorry, something went wrong, couldn't update racetrack!" });
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch
             {
