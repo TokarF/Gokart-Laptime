@@ -5,7 +5,7 @@ namespace Gokart_Laptime.Services
     public interface IRaceTrackDAO
     {
         List<RaceTrackModel> GetAllRaceTracks();
-        int AddRaceTrack(RaceTrackModel raceTrackModel);
+        int AddRaceTrack(RaceTrackModel raceTrack);
 
         RaceTrackModel GetRaceTrackById(int id);
         bool UpdateRaceTrack(RaceTrackModel raceTrack);

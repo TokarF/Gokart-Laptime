@@ -6,7 +6,7 @@ namespace Gokart_Laptime.Models
     {
         [Key]
         [Display(Name = "#")]
-        [DisplayFormat(DataFormatString = "{0:000}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:000}")]
         public int RaceTrackId { get; set; }
 
         [Display(Name = "Racetrack name")]
@@ -33,7 +33,6 @@ namespace Gokart_Laptime.Models
         [StringLength(300, MinimumLength = 10, ErrorMessage = "The racetrack description has to be between 10 - 300 charaters")]
         [DisplayFormat(NullDisplayText = "N/A")]
         public string? Description { get; set; }
-
 
 
     }

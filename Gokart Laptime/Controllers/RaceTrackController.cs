@@ -53,14 +53,15 @@ namespace Gokart_Laptime.Controllers
             {
                 if (!ModelState.IsValid) return View(raceTrack);
 
-                if (raceTrackDAO.AddRaceTrack(raceTrack) == -1)
+                if (raceTrackDAO.AddRaceTrack(raceTrack) != -1)
                 {
-                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Sorry, something went wrond, couldn't add racetrack!" });
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "RaceTrack has been successfully added!" });
                     return RedirectToAction(nameof(Index));
+      
                 }
                 else
                 {
-                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "RaceTrack has been successfully added!" });
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Sorry, something went wrong, couldn't add racetrack!" });
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -94,6 +95,7 @@ namespace Gokart_Laptime.Controllers
             try
             {
                 if (!ModelState.IsValid) return View(raceTrack);
+
                 if (raceTrackDAO.UpdateRaceTrack(raceTrack))
                 {
                     TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "RaceTrack has been successfully updated!" });

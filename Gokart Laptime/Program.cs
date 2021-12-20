@@ -25,6 +25,7 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddSingleton<IUserDAO, UserDAO>();
 builder.Services.AddSingleton<IRaceTrackDAO, RaceTrackDAO>();
+builder.Services.AddSingleton<IRaceDAO, RaceDAO>();
 
 builder.Services.AddHttpContextAccessor();
 

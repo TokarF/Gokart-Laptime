@@ -2,7 +2,7 @@
 using Gokart_Laptime.Services;
 using System.Data.SqlClient;
 
-namespace Gokart_Laptime.Controllers
+namespace Gokart_Laptime.Services
 {
     public class RaceTrackDAO : IRaceTrackDAO
     {
@@ -133,6 +133,5 @@ namespace Gokart_Laptime.Controllers
             return updated;
         }
 
-       
     }
 }
