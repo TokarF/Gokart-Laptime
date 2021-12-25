@@ -1,13 +1,16 @@
 ﻿using Gokart_Laptime.Models;
 using Gokart_Laptime.Services;
 using Gokart_Laptime.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace Gokart_Laptime.Controllers
 {
+    [Authorize]
     public class RaceController : Controller
     {
         private readonly IRaceDAO raceDAO;
@@ -29,7 +32,16 @@ namespace Gokart_Laptime.Controllers
         // GET: RaceController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            RaceModel race = raceDAO.GetRaceById(id);
+            if (race is not null)
+            {
+                return View(race);
+            }
+            else
+            {
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Sorry, something went wrong, we can't find the race!" });
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // GET: RaceController/Create
@@ -47,10 +59,14 @@ namespace Gokart_Laptime.Controllers
         {
             try
             {
+                race.Created_By = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value);
                 if (!ModelState.IsValid) return View(race);
 
-                if (raceDAO.AddRace(race) != -1)
+                int raceId = raceDAO.AddRace(race);
+
+                if (raceId != -1)
                 {
+                    raceDAO.AddRacer(Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value), raceId);
                     TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "Race has been successfully added!" });
                     return RedirectToAction(nameof(Index));
                 }
@@ -72,17 +88,21 @@ namespace Gokart_Laptime.Controllers
         public ActionResult Edit(int id)
         {
             RaceModel race = raceDAO.GetRaceById(id);
-            if (race is not null)
-            {
-                var raceTrackList = raceDAO.RaceTracksList();
-                ViewData["RaceTracks"] = new SelectList(raceTrackList, "Key", "Value");
-                return View(race);
-            }
-            else
+            if (race is null)
             {
                 TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Race is not found!" });
                 return RedirectToAction(nameof(Index));
+  
             }
+            else if(race.Created_By != Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value))
+            {
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "You are not allowed to do that!" });
+                return RedirectToAction(nameof(Index));
+            }
+
+            var raceTrackList = raceDAO.RaceTracksList();
+            ViewData["RaceTracks"] = new SelectList(raceTrackList, "Key", "Value");
+            return View(race);
         }
 
         // POST: RaceController/Edit/5
@@ -92,8 +112,12 @@ namespace Gokart_Laptime.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) return View(race);
-
+                if (!ModelState.IsValid)
+                {
+                    var raceTrackList = raceDAO.RaceTracksList();
+                    ViewData["RaceTracks"] = new SelectList(raceTrackList, "Key", "Value");
+                    return View(race);
+                }
                 if (raceDAO.UpdateRace(race))
                 {
                     TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "Race has been successfully updated!" });
@@ -111,6 +135,63 @@ namespace Gokart_Laptime.Controllers
                 TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Sorry, something went wrong, couldn't update racetrack!" });
                 return RedirectToAction(nameof(Index));
             }
+        }
+
+        public ActionResult Racers(int id)
+        {
+            RaceModel race = raceDAO.GetRaceById(id);
+
+            if (race.Created_By != Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value))
+            {
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "You are not allowed to do that!" });
+                return RedirectToAction(nameof(Index));
+            }
+
+            RaceRacersViewModel raceRacersViewModel = new RaceRacersViewModel
+            {
+                Race = race,
+                IncludedRacers = raceDAO.GetRaceRacers(id),
+                NotIncludedRacers = raceDAO.GetAllRacers(id)
+            };
+            //ViewBag.Information = TempData["Information"];
+            return View(raceRacersViewModel);
+        }
+
+        public PartialViewResult AddRacer(int selectedRacerId, int raceId)
+        {
+            raceDAO.AddRacer(selectedRacerId, raceId);
+            
+            RaceModel race = raceDAO.GetRaceById(raceId);
+
+
+            RaceRacersViewModel raceRacersViewModel = new RaceRacersViewModel
+            {
+                Race = race,
+                IncludedRacers = raceDAO.GetRaceRacers(raceId),
+                NotIncludedRacers = raceDAO.GetAllRacers(raceId)
+            };
+
+            return PartialView("_RaceRacers", raceRacersViewModel);
+
+        }
+
+        public PartialViewResult RemoveRacer(int racerId, int raceId)
+        {
+            raceDAO.RemoveRacer(raceId, racerId);
+
+            RaceModel race = raceDAO.GetRaceById(raceId);
+
+
+            RaceRacersViewModel raceRacersViewModel = new RaceRacersViewModel
+            {
+                Race = race,
+                IncludedRacers = raceDAO.GetRaceRacers(raceId),
+                NotIncludedRacers = raceDAO.GetAllRacers(raceId)
+            };
+            
+
+            return PartialView("_RaceRacers", raceRacersViewModel);
+
         }
 
         // GET: RaceController/Delete/5
@@ -135,3 +216,4 @@ namespace Gokart_Laptime.Controllers
         }
     }
 }
+

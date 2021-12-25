@@ -1,0 +1,45 @@
+﻿@model Gokart_Laptime.Models.RaceModel
+
+@{
+    ViewData["Title"] = "Race Details";
+}
+
+<div class="col-xl-8 mb-3 mx-auto card bg-dark border-secondary text-light">
+    <div class="card-header bg-danger">
+          <span class="fw-bold fs-5">@Html.DisplayNameFor(model => model.RaceId): @Html.DisplayFor(model => model.RaceId)</span>
+    </div>
+    <div class="card-body">
+        <div class="row g-2 justify-content-md-start">
+            <div class="col-md-3">
+               <span class="fw-bold">@Html.DisplayNameFor(model => model.RaceTrackName)</span> 
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.RaceTrackName)
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                 <span class="fw-bold">@Html.DisplayNameFor(model => model.RaceDate)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.RaceDate)
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                 <span class="fw-bold">@Html.DisplayNameFor(model => model.Description)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.Description)
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="col-xl-4 mx-auto">
+    <a asp-action="Racers" asp-route-id="@Model.RaceId" class="w-100 btn btn-outline-info"><i class="fas fa-plus me-2"></i>Racers</a>
+</div>

@@ -5,6 +5,7 @@ using System.Diagnostics;
 
 namespace Gokart_Laptime.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -14,7 +15,6 @@ namespace Gokart_Laptime.Controllers
             _logger = logger;
         }
 
-        [Authorize]
         public IActionResult Index()
         {
             ViewBag.Information = TempData["Information"];

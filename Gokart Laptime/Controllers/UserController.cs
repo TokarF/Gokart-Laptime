@@ -52,7 +52,7 @@ namespace Gokart_Laptime.Controllers
 
                 userDAO.RegisterUser(userRegistrationViewModel);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Login");
             }
             catch
             {

@@ -5,7 +5,7 @@ namespace Gokart_Laptime.Models
     public class RaceModel
     {
         [Key]
-        [Display(Name = "ID")]
+        [Display(Name = "Race")]
         [DisplayFormat(DataFormatString = "{0:00000}")]
         public int RaceId { get; set; }
 
@@ -27,8 +27,15 @@ namespace Gokart_Laptime.Models
         [DisplayFormat(NullDisplayText = "N/A")]
         public string? Description { get; set; }
 
+        [Display(Name = "Track")]
         public string? RaceTrackName { get; set; }
 
+        [Display(Name = "Created by")]
+        public int Created_By { get; set; }
 
+        [Display(Name = "Racers")]
+        public List<RacerModel>? Racers { get; set; } = null;
+
+  
     }
 }

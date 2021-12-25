@@ -1,0 +1,96 @@
+﻿@model Gokart_Laptime.ViewModels.RaceRacersViewModel
+
+@{
+    ViewData["Title"] = "Racers";
+}
+
+
+
+<div class="col-xl-8 mb-3 mx-auto card bg-dark border-secondary text-light">
+    <div class="card-header bg-danger">
+          <span class="fw-bold fs-5">@Html.DisplayNameFor(model => model.Race.RaceId): @Html.DisplayFor(model => model.Race.RaceId)</span>
+    </div>
+    <div class="card-body">
+        <div class="row g-2 justify-content-md-start">
+            <div class="col-md-3">
+               <span class="fw-bold">@Html.DisplayNameFor(model => model.Race.RaceTrackName)</span> 
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.Race.RaceTrackName)
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                 <span class="fw-bold">@Html.DisplayNameFor(model => model.Race.RaceDate)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.Race.RaceDate)
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                 <span class="fw-bold">@Html.DisplayNameFor(model => model.Race.Description)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.Race.Description)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="racers">
+    <partial name="_RaceRacers"  />
+
+</div>
+
+
+<script>
+    let racertoDeleteId;
+    let raceId;
+
+    function AddRacer()
+    {
+        let sRacerId = document.getElementById("racerSelect").value;
+        let rId = document.getElementById("raceId").value;
+        $.ajax({
+            type: "POST",
+            url: "/Race/AddRacer",
+            data: {selectedRacerId: sRacerId, raceId: rId},
+            success: function (data) {
+                $("#racers").html(data);
+            },
+            error: function() {
+                console.log(JSON.stringify(error));
+            }
+        });
+    }
+
+    function RemoveRacerModal(element)
+    {
+        console.log(element.getAttribute('data-racerid'));
+        console.log(element.getAttribute('data-raceid'));
+        racertoDeleteId = element.getAttribute('data-racerid');
+        raceId = element.getAttribute('data-raceid');
+    }
+
+    function RemoveRacer()
+    {
+
+        $.ajax({
+            type: "POST",
+            url: "/Race/RemoveRacer",
+            data: {racerId: racertoDeleteId, raceId: raceId},
+            success: function (data) {
+                $("#racers").html(data);
+                $('.modal-backdrop').remove();
+
+            },
+            error: function() {
+                console.log(JSON.stringify(error));
+            }
+        });
+    }
+
+</script>
