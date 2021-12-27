@@ -6,12 +6,12 @@
 
 <div class="col-xl-8 mb-3 mx-auto card bg-dark border-secondary text-light">
     <div class="card-header bg-danger">
-          <span class="fw-bold fs-5">@Html.DisplayNameFor(model => model.RaceId): @Html.DisplayFor(model => model.RaceId)</span>
+        <span class="fw-bold fs-5">@Html.DisplayNameFor(model => model.RaceId): @Html.DisplayFor(model => model.RaceId)</span>
     </div>
     <div class="card-body">
         <div class="row g-2 justify-content-md-start">
             <div class="col-md-3">
-               <span class="fw-bold">@Html.DisplayNameFor(model => model.RaceTrackName)</span> 
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.RaceTrackName)</span>
             </div>
             <div class="col">
                 @Html.DisplayFor(model => model.RaceTrackName)
@@ -20,7 +20,7 @@
             <div class="w-100"></div>
 
             <div class="col-md-3">
-                 <span class="fw-bold">@Html.DisplayNameFor(model => model.RaceDate)</span>
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.RaceDate)</span>
             </div>
             <div class="col">
                 @Html.DisplayFor(model => model.RaceDate)
@@ -29,14 +29,110 @@
             <div class="w-100"></div>
 
             <div class="col-md-3">
-                 <span class="fw-bold">@Html.DisplayNameFor(model => model.Description)</span>
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.Description)</span>
             </div>
             <div class="col">
                 @Html.DisplayFor(model => model.Description)
             </div>
+            
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.RaceBestLapTime)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.RaceBestLapTime)
+            </div>
         </div>
     </div>
 </div>
+
+@foreach (var racer in Model.Racers)
+{
+    <div class="table-responsive rounded col-xl-8 mx-auto mb-3">
+        <table class="table text-light table-bordered border-secondary text-nowrap ">
+            <thead class="bg-danger text-center">
+                <tr>
+                    <th colspan="3">
+                        @racer.RacerName
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        #
+                    </th>
+                    <th>
+                        Laptime
+                    </th>
+                    <th>
+                        Diff.
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="text-center align-middle">
+                @if (racer.Laptimes.Count() > 0)
+                {
+                    @for (int i = 0; i < racer.Laptimes.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => racer.Laptimes[i].Lap)
+                            </td>
+                            <td class="font-monospace">
+                                @Html.DisplayFor(modelItem => racer.Laptimes[i].LapTime)
+                            </td>
+                            <td class="font-monospace">
+                                @if (i > 0)
+                                {
+                                    TimeSpan diff = racer.Laptimes[i].LapTime - racer.Laptimes[i - 1].LapTime;
+                                    @if (diff < TimeSpan.Zero)
+                                    {
+                                        <span class="text-danger">
+
+                                            +@Html.Raw(diff.ToString(@"mm\:ss\.fff")) 
+                                            <i class="fas fa-angle-double-down fa-xs"></i>
+                                            </span>
+                                        
+                                    }
+                                    else
+                                    {
+                                        <span class="text-success">
+                                            -@Html.Raw(diff.ToString(@"mm\:ss\.fff")) 
+                                            <i class="fas fa-angle-double-up fa-xs"></i>
+
+                                        </span>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+            <tfoot>
+                <tr class="">
+                    <td class="text-center">
+                        @Html.DisplayNameFor(model => racer.AverageLapTime)
+                    </td>
+                    <td class="text-center text-warning font-monospace">
+                        @Html.DisplayFor(model => racer.AverageLapTime)
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr class="">
+                    <td class="text-center">
+                        @Html.DisplayNameFor(model => racer.BestLapTime)
+                    <td class="text-center text-success font-monospace">
+                            @Html.DisplayFor(model => racer.BestLapTime)
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}
+
 
 
 

@@ -13,6 +13,43 @@ namespace Gokart_Laptime.Models
         [Display(Name = "Name")]
         public string? RacerName { get; set; }
 
+        [Display(Name = "Laptimes")]
+        public List<LaptimeModel>? Laptimes { get; set; }
 
+        [Display(Name = "Average Laptime")]
+        [DisplayFormat(DataFormatString = "{0:mm\\:ss\\.fff}")]
+        public TimeSpan? AverageLapTime
+        {
+            get 
+            {
+                if (this.Laptimes.Count > 0)
+                {
+                    return TimeSpan.FromTicks((long)this.Laptimes.Select(x => x.LapTime.Ticks).Average());
+                }
+                else
+                {
+                    return null;
+                }
+                
+            }
+        }
+
+        [Display(Name = "Best Laptime")]
+        [DisplayFormat(DataFormatString = "{0:mm\\:ss\\.fff}")]
+        public TimeSpan? BestLapTime
+        {
+            get
+            {
+                if (this.Laptimes.Count > 0)
+                {
+                    return this.Laptimes.Select(x => x.LapTime).Min();
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+        }
     }
 }
