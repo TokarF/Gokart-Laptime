@@ -1,0 +1,290 @@
+﻿@model Gokart_Laptime.ViewModels.RaceLaptimesViewModel
+
+@{
+    ViewData["Title"] = "LapTimes";
+}
+
+
+
+
+<div class="col-xl-8 mb-3 mx-auto card bg-dark border-secondary text-light">
+    <div class="card-header bg-danger">
+        <span class="fw-bold fs-5">@Html.DisplayNameFor(model => model.Race.RaceId): @Html.DisplayFor(model => model.Race.RaceId)</span>
+    </div>
+    <div class="card-body">
+        <div class="row g-2 justify-content-md-start">
+            <div class="col-md-3">
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.Race.RaceTrackName)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.Race.RaceTrackName)
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.Race.RaceDate)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.Race.RaceDate)
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.Race.Description)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.Race.Description)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-xl-8 mx-auto row justify-content-center mb-3 gap-2 mb-3">
+    <div class="col col-sm px-0">
+        <input required type="number" min="0" class="form-control bg-dark text-light" name="min" placeholder="min">
+    </div>
+    <div class="col col-sm px-0">
+        <input required type="number" min="0" class="form-control bg-dark text-light" name="sec" placeholder="sec">
+    </div>
+    <div class="col col-sm px-0">
+        <input required type="number" min="0" class="form-control bg-dark text-light" name="msec" placeholder="msec">
+    </div>
+    <div id="addEditLapDiv" class="col-12 col-sm-3 px-0 mt-2 mt-sm-0">
+        <button onclick="AddNewLap(this)" type="submit" class="w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>Add</button>
+    </div>
+</div>
+
+
+
+<form id="sendLaps" method="POST" asp-action="Laptimes">
+    <input type="hidden" name="RaceId" value="@Model.Race.RaceId" />
+    <div class="table-responsive rounded col-xl-8 mx-auto mb-3">
+        <table class="table text-light table-bordered border-secondary text-nowrap">
+            <thead class="bg-danger text-center">
+                <tr>
+                    <th>
+                        Lap
+                    </th>
+                    <th>
+                        Laptime
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="lapTimes" class="text-center align-middle">
+                @if (Model.Laptimes.Count() > 0)
+                {
+                    @for (int i = 0; i < Model.Laptimes.Count; i++)
+                    {
+                        <tr>
+                            <input type="hidden" name="Laptimes[@i].Id" value="@Model.Laptimes[i].Id" />
+                            <input type="hidden" name="Laptimes[@i].Lap" value="@Model.Laptimes[i].Lap" />
+                            <input type="hidden" name="Laptimes[@i].LapTime" value="@Model.Laptimes[i].LapTime.TotalMilliseconds" />
+                            <td>
+                                @Html.DisplayFor(modelItem => Model.Laptimes[i].Lap)
+                            </td>
+                            <td class="font-monospace">
+                                @Html.DisplayFor(modelItem => Model.Laptimes[i].LapTime)
+                            </td>
+                            <td>
+                                <a onclick="EditLap(this)" data-index="@i" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                <a onclick="DeleteLap(this)" data-index="@i" class="btn btn-outline-danger"><i class="fas fa-eraser"></i></a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+            <tfoot>
+                <tr class="">
+                    <td class="text-center">
+                        Average Laptime
+                    </td>
+                    <td id="averageLap" class="text-center text-warning font-monospace">
+                        @((Model.Laptimes.Count() > 0) ? TimeSpan.FromTicks((long)Model.Laptimes.Average(lt => lt.LapTime.Ticks)).ToString(@"mm\:ss\.fff") : "-")
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+                <tr class="">
+                    <td class="text-center">
+                        Best Laptime
+                    </td>
+                    <td id="bestLap" class="text-center text-success font-monospace">
+                         @((Model.Laptimes.Count() > 0) ? TimeSpan.FromTicks((long)Model.Laptimes.Min(lt => lt.LapTime.Ticks)).ToString(@"mm\:ss\.fff") : "-")
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</form>
+
+
+<div class="col-xl-4 mx-auto">
+    <button type="submit" form="sendLaps" class="w-100 btn btn-outline-info"><i class="fas fa-plus me-2"></i>Save</button>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}
+
+<script>
+    class LapTime 
+    {
+        constructor({id = 0, lap, lapTime}) 
+        {
+            this.id = id;
+            this.lap = lap;
+            this.lapTime = lapTime;
+        }
+    }
+
+    let lapTimes = new Array();
+    let lapTimeTable;
+    let lapTimeTableRows;
+    let lapTimeForm = document.querySelector("#laptimeform");
+    let averageLap = document.querySelector("#averageLap");
+    let bestLap = document.querySelector("#bestLap");
+    let min = document.querySelector("input[name='min']");
+    let sec = document.querySelector("input[name='sec']");
+    let msec = document.querySelector("input[name='msec']");
+    let addEditLapDiv = document.querySelector("#addEditLapDiv");
+    let addNewLapBtn = `<button onclick="AddNewLap(this)" type="submit" class="w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>Add</button>`;
+
+    window.addEventListener("load", (event) => 
+    {
+        fillLaptimeList();
+    });
+
+    function fillLaptimeList()
+    {
+        lapTimeTable = document.querySelector("#lapTimes");
+        lapTimeTableRows = lapTimeTable.querySelectorAll("tr");
+
+        lapTimeTableRows.forEach((row, i) =>
+        {
+            let id = parseInt(row.querySelector(`input[name="Laptimes[${i}].Id"]`).value);
+            let lap = parseInt(row.querySelector(`input[name="Laptimes[${i}].Lap"]`).value);
+            let lapTime = parseInt(row.querySelector(`input[name="Laptimes[${i}].LapTime"]`).value);
+            lapTimes.push(new LapTime({id, lap, lapTime}));
+        });
+    }
+
+    function AddNewLap(e)
+    {
+        if(validated())
+        {
+            let newLapTime = parseInt(min.value * 60000) + parseInt(sec.value * 1000) + parseInt(msec.value);
+            lapTimes.push(new LapTime({lap: lapTimes.length + 1, lapTime: newLapTime}));
+            console.log(lapTimes);
+            ClearInputs();
+            RefreshTable();
+        }
+    }
+
+    function EditLap(e)
+    {
+        let updateLapBtn = `<button onclick="UpdateLap(this)" data-index="${e.dataset.index}" id="#updateLapBtn"  class="w-100 btn btn-outline-warning"><i class="fas fa-pen me-2"></i>Update</button>`;
+
+        let d = new Date(Date.UTC(0,0,0,0,0,0,lapTimes[e.dataset.index].lapTime));
+        min.value = d.getMinutes();
+        sec.value = d.getSeconds();
+        msec.value = d.getMilliseconds();
+        addEditLapDiv.innerHTML = updateLapBtn;
+    }
+
+    function UpdateLap(e)
+    {
+        if(validated())
+        {
+            let updatedLapTime = parseInt(min.value * 60000) + parseInt(sec.value * 1000) + parseInt(msec.value);
+            lapTimes[e.dataset.index].lapTime = updatedLapTime;
+            ClearInputs();
+            addEditLapDiv.innerHTML = addNewLapBtn;
+            RefreshTable();
+        }
+    }
+
+    function DeleteLap(e)
+    {
+        lapTimes.splice(e.dataset.index, 1);
+        ClearInputs();
+        RefreshTable();
+        addEditLapDiv.innerHTML = addNewLapBtn;
+
+    }
+
+
+
+    function RefreshTable()
+    {
+        let text = "";
+        lapTimes.forEach((item, index) =>
+        {
+            item.lap = index + 1; 
+            text +=
+            `
+                <tr>
+                    <input type="hidden" name="Laptimes[${index}].Id" value="${item.id}" />
+                    <input type="hidden" name="Laptimes[${index}].Lap" value="${item.lap}" />
+                    <input type="hidden" name="Laptimes[${index}].LapTime" value="${item.lapTime}" />
+                    <td>${item.lap}</td>
+                    <td class="font-monospace" >${msToTime(item.lapTime)}</td>
+                    <td>
+                        <a onclick="EditLap(this)" data-index="${index}" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                        <a onclick="DeleteLap(this)" data-index="${index}" class="btn btn-outline-danger"><i class="fas fa-eraser"></i></a>
+                    </td>
+                </tr>
+            `
+        });
+        let avg = lapTimes.reduce((a,b) => a + b.lapTime, 0) / lapTimes.length;
+        let best = Math.min(...lapTimes.map(item => item.lapTime));
+        averageLap.innerHTML = msToTime(Math.round(avg));
+        bestLap.innerHTML = msToTime(best);
+
+        lapTimeTable.innerHTML = "";
+        lapTimeTable.innerHTML = text;
+
+    }
+
+    function validated()
+    {
+        let flags = [];
+
+        flags[0] = min.reportValidity();
+        flags[1] = sec.reportValidity(); 
+        flags[2] = msec.reportValidity();
+
+        return flags.every(Boolean);
+    }
+
+     function ClearInputs()
+    {
+        min.value = "";
+        sec.value = "";
+        msec.value = "";
+    }
+
+    function msToTime(s) 
+    {
+
+        function pad(n, z) {
+        z = z || 2;
+        return ('00' + n).slice(-z);
+      }
+
+      var ms = s % 1000;
+      s = (s - ms) / 1000;
+      var secs = s % 60;
+      s = (s - secs) / 60;
+      var mins = s % 60;
+
+      return pad(mins) + ':' + pad(secs) + '.' + pad(ms, 3);
+    }
+    
+</script>

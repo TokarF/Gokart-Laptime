@@ -41,7 +41,7 @@ namespace Gokart_Laptime.Controllers
             {
                 race.Racers = racerDAO.GetRacersByRaceID(id);
                 race.Racers.ForEach(racer => racer.Laptimes = lapTimeDAO.GetRacerLaptimeByRaceAndRacerId(id, racer.RacerId));
-
+                ViewBag.Information = TempData["Information"];
                 return View(race);
             }
             else
@@ -90,7 +90,6 @@ namespace Gokart_Laptime.Controllers
             }
         }
 
-        // GET: RaceController/Edit/5
         public ActionResult Edit(int id)
         {
             RaceModel race = raceDAO.GetRaceById(id);
@@ -145,21 +144,21 @@ namespace Gokart_Laptime.Controllers
             }
         }
 
-        public ActionResult Racers(int id)
+        public ActionResult Racers(int raceId)
         {
-            RaceModel race = raceDAO.GetRaceById(id);
+            RaceModel race = raceDAO.GetRaceById(raceId);
 
             if (race.Created_By != Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value))
             {
                 TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "You are not allowed to do that!" });
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = raceId });
             }
 
             RaceRacersViewModel raceRacersViewModel = new RaceRacersViewModel
             {
                 Race = race,
-                IncludedRacers = racerDAO.GetRacersByRaceID(id),
-                NotIncludedRacers = racerDAO.GetAllRacers(id)
+                IncludedRacers = racerDAO.GetRacersByRaceID(raceId),
+                NotIncludedRacers = racerDAO.GetAllRacers(raceId)
             };
             //ViewBag.Information = TempData["Information"];
             return View(raceRacersViewModel);
@@ -195,26 +194,35 @@ namespace Gokart_Laptime.Controllers
 
         }
 
-        // GET: RaceController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpGet]
+        public ActionResult LapTimes(int raceId)
         {
-            return View();
+            
+            if (!racerDAO.GetRacersByRaceID(raceId).Any(r => r.RacerId == Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value)))
+            {
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "You are not added to the racers list" });
+                return RedirectToAction("Details", new { id = raceId });
+            }
+
+            RaceLaptimesViewModel raceLaptimesViewModel = new RaceLaptimesViewModel
+            {
+                Race = raceDAO.GetRaceById(raceId),
+                Laptimes = lapTimeDAO.GetRacerLaptimeByRaceAndRacerId(raceId, Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value))
+            };
+            return View(raceLaptimesViewModel);
         }
 
-        // POST: RaceController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult LapTimes(RaceLaptimesViewModel raceLaptimesViewModel)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            raceLaptimesViewModel.RacerId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value);
+
+            lapTimeDAO.ManageLapTimes(raceLaptimesViewModel);
+
+            return RedirectToAction("Details", new { Id = raceLaptimesViewModel.RaceId } );
         }
+
+     
     }
 }
 
