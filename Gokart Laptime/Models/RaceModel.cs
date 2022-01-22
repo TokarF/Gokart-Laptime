@@ -42,14 +42,20 @@ namespace Gokart_Laptime.Models
         {
             get 
             {
-                var bestLap = Racers.Where(racer => racer.Laptimes.Count > 0)
-                       .Select(racer => new {
-                           RacerName = racer.RacerName,
-                           LapTime = racer.BestLapTime
-                       }).MinBy(x => x.LapTime);
-
-                return string.Format("{0:mm\\:ss\\.fff} - {1}", bestLap?.LapTime, bestLap?.RacerName);
-
+                if (Racers is not null)
+                {
+                    var bestLap = Racers.Where(racer => racer.Laptimes.Count > 0)
+                                         .Select(racer => new {
+                                             RacerName = racer.RacerName,
+                                             LapTime = racer.BestLapTime
+                                         }).MinBy(x => x.LapTime);
+                    
+                    return string.Format("{0:mm\\:ss\\.fff} - {1}", bestLap?.LapTime, bestLap?.RacerName);
+                }
+                else
+                {
+                    return "N/A";
+                }
             }
         }
 

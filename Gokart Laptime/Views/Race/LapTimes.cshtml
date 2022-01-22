@@ -124,7 +124,7 @@
 
 
 <div class="col-xl-4 mx-auto">
-    <button type="submit" form="sendLaps" class="w-100 btn btn-outline-info"><i class="fas fa-plus me-2"></i>Save</button>
+    <button type="submit" form="sendLaps" class="w-100 btn btn-outline-danger"><i class="fas fa-save me-2"></i>Save</button>
 </div>
 
 @section Scripts {
@@ -244,8 +244,8 @@
         });
         let avg = lapTimes.reduce((a,b) => a + b.lapTime, 0) / lapTimes.length;
         let best = Math.min(...lapTimes.map(item => item.lapTime));
-        averageLap.innerHTML = msToTime(Math.round(avg));
-        bestLap.innerHTML = msToTime(best);
+        averageLap.innerHTML = (lapTimes.length > 0) ? msToTime(Math.round(avg)) : "-";
+        bestLap.innerHTML = (lapTimes.length > 0) ? msToTime(best) : "-";
 
         lapTimeTable.innerHTML = "";
         lapTimeTable.innerHTML = text;

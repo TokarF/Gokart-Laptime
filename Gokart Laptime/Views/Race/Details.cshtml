@@ -100,19 +100,16 @@
                                     TimeSpan diff = racer.Laptimes[i].LapTime - racer.Laptimes[i - 1].LapTime;
                                     @if (diff < TimeSpan.Zero)
                                     {
-                                        <span class="text-danger">
-
-                                            +@Html.Raw(diff.ToString(@"mm\:ss\.fff")) 
-                                            <i class="fas fa-angle-double-down fa-xs"></i>
-                                            </span>
-                                        
-                                    }
-                                    else
-                                    {
                                         <span class="text-success">
                                             -@Html.Raw(diff.ToString(@"mm\:ss\.fff")) 
                                             <i class="fas fa-angle-double-up fa-xs"></i>
-
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger">
+                                            +@Html.Raw(diff.ToString(@"mm\:ss\.fff")) 
+                                            <i class="fas fa-angle-double-down fa-xs"></i>
                                         </span>
                                     }
                                 }

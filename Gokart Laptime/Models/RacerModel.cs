@@ -17,7 +17,7 @@ namespace Gokart_Laptime.Models
         public List<LaptimeModel>? Laptimes { get; set; }
 
         [Display(Name = "Average Laptime")]
-        [DisplayFormat(DataFormatString = "{0:mm\\:ss\\.fff}")]
+        [DisplayFormat(DataFormatString = "{0:mm\\:ss\\.fff}", NullDisplayText = "N/A")]
         public TimeSpan? AverageLapTime
         {
             get 
@@ -35,7 +35,7 @@ namespace Gokart_Laptime.Models
         }
 
         [Display(Name = "Best Laptime")]
-        [DisplayFormat(DataFormatString = "{0:mm\\:ss\\.fff}")]
+        [DisplayFormat(DataFormatString = "{0:mm\\:ss\\.fff}", NullDisplayText = "N/A")]
         public TimeSpan? BestLapTime
         {
             get

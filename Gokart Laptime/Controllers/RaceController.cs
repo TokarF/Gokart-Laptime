@@ -28,6 +28,17 @@ namespace Gokart_Laptime.Controllers
         public ActionResult Index()
         {
             List<RaceModel> races = raceDAO.GetAllRaces();
+            races.ForEach(race => race.Racers = racerDAO.GetRacersByRaceID(race.RaceId));
+            foreach (RaceModel race in races)
+            {
+                race.Racers = racerDAO.GetRacersByRaceID(race.RaceId);
+
+                foreach (RacerModel racer  in race.Racers)
+                {
+                    racer.Laptimes = lapTimeDAO.GetRacerLaptimeByRaceAndRacerId(race.RaceId, racer.RacerId);
+                }
+            }
+
 
             ViewBag.Information = TempData["Information"];
             return View(races);
@@ -216,6 +227,8 @@ namespace Gokart_Laptime.Controllers
         public ActionResult LapTimes(RaceLaptimesViewModel raceLaptimesViewModel)
         {
             raceLaptimesViewModel.RacerId = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value);
+            
+            if (raceLaptimesViewModel.Laptimes is null) raceLaptimesViewModel.Laptimes = new List<LaptimeModel>();
 
             lapTimeDAO.ManageLapTimes(raceLaptimesViewModel);
 
