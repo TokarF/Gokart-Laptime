@@ -35,7 +35,7 @@
             <div class="col">
                 @Html.DisplayFor(model => model.Description)
             </div>
-            
+
             <div class="w-100"></div>
 
             <div class="col-md-3">
@@ -54,8 +54,8 @@
     <div class="col-12 col-sm px-0">
         <a asp-action="Racers" asp-route-raceId="@Model.RaceId" class="w-100 btn btn-outline-info"><i class="fas fa-plus me-2"></i>Racers</a>
     </div>
-    
-        <div class="col-12 col-sm px-0">
+
+    <div class="col-12 col-sm px-0">
         <a asp-action="Laptimes" asp-route-raceId="@Model.RaceId" class="w-100 @((!Model.Racers.Any(r => r.RacerId == Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value))) ? "disabled" : "") btn btn-outline-success"><i class="fas fa-plus me-2"></i>Laptimes</a>
     </div>
 </div>
@@ -101,14 +101,14 @@
                                     @if (diff < TimeSpan.Zero)
                                     {
                                         <span class="text-success">
-                                            -@Html.Raw(diff.ToString(@"mm\:ss\.fff")) 
+                                            -@Html.Raw(diff.ToString(@"mm\:ss\.fff"))
                                             <i class="fas fa-angle-double-up fa-xs"></i>
                                         </span>
                                     }
                                     else
                                     {
                                         <span class="text-danger">
-                                            +@Html.Raw(diff.ToString(@"mm\:ss\.fff")) 
+                                            +@Html.Raw(diff.ToString(@"mm\:ss\.fff"))
                                             <i class="fas fa-angle-double-down fa-xs"></i>
                                         </span>
                                     }
@@ -144,3 +144,66 @@
 }
 
 
+<div class="col-xl-8 mx-auto row justify-content-center chart-container card bg-dark border-secondary">
+    <div class="card-header bg-danger text-center">
+        <span class="fw-bold fs-5">Laptimes</span>
+    </div>
+     <div class="card-body">
+        <canvas id="chart"></canvas>
+     </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+    const data = @Html.Raw(ViewBag.Data);
+
+    const config = {
+      type: 'line',
+      data: data,
+      options: {
+        tension: 0.1,
+        responsive: true,
+        color: '#f8f9fa',
+        scales: {
+            x: {
+                grid: {
+                    color: '#6c757d',
+                },
+                ticks: {
+                      color: "#f8f9fa", 
+                        font: {
+                          size: 14
+                      }
+                }
+            },
+            y: {
+                grid: {
+                    color: '#6c757d',
+                },
+               ticks: {
+                      color: "#f8f9fa",
+                      font: {
+                          size: 14
+                      }
+                }
+            }
+        },
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+            color: '#f8f9fa',
+            font: {
+                size: 14
+            }
+          }
+        }
+      },
+    };
+
+      var myChart = new Chart(
+        document.getElementById('chart'),
+        config
+      );
+</script>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Security.Claims;
 
 namespace Gokart_Laptime.Controllers
@@ -52,7 +53,25 @@ namespace Gokart_Laptime.Controllers
             {
                 race.Racers = racerDAO.GetRacersByRaceID(id);
                 race.Racers.ForEach(racer => racer.Laptimes = lapTimeDAO.GetRacerLaptimeByRaceAndRacerId(id, racer.RacerId));
+
+
+                Random random = new Random();
+                var data = new
+                {
+                    labels = Enumerable.Range(1, race.Racers.Select(x => x.Laptimes.Count).Max()),
+                    datasets = race.Racers.Select(racer => new
+                    {
+                        label = racer.RacerName,
+                        data = racer.Laptimes.Select(lapTime => lapTime.LapTime.TotalSeconds),
+                        borderColor = string.Format("#{0:X6}", random.Next(0x1000000)),
+                    })
+                };
+
+                string output = JsonConvert.SerializeObject(data);
+
+         
                 ViewBag.Information = TempData["Information"];
+                ViewBag.Data = output;
                 return View(race);
             }
             else
