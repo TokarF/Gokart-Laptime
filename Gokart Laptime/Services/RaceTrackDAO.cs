@@ -133,5 +133,38 @@ namespace Gokart_Laptime.Services
             return updated;
         }
 
+        public List<RaceModel> GetRaceTrackRacesById(int raceTrackId)
+        {
+            List<RaceModel> races = new List<RaceModel>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.Connection = connection;
+                        command.CommandText = "SELECT R.*, RT.name FROM dbo.Races R LEFT JOIN dbo.RaceTracks RT ON RT.id = R.racetrack_id WHERE RT.id = @raceTrackId";
+                        connection.Open();
+                        command.Parameters.AddWithValue("@raceTrackId", raceTrackId);
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                races.Add(new RaceModel { RaceId = (int)reader[0], RaceTrackId = (int)reader[1], RaceDate = (DateTime)reader[2], Description = reader.IsDBNull(3) ? null : (string)reader[3], Created_By = (int)reader[4], RaceTrackName = (string)reader[5] });
+                            }
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return races;
+
+        }
     }
 }

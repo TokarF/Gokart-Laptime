@@ -22,6 +22,10 @@ namespace Gokart_Laptime.Controllers
             try
             {
                 List<RaceTrackModel> raceTracks = raceTrackDAO.GetAllRaceTracks();
+
+                raceTracks.ForEach(raceTrack => raceTrack.Races = raceTrackDAO.GetRaceTrackRacesById(raceTrack.RaceTrackId));
+                
+
                 ViewBag.Information = TempData["Information"];
                 return View(raceTracks);
             }

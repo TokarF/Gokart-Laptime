@@ -35,5 +35,10 @@ namespace Gokart_Laptime.Models
         public string? Description { get; set; }
 
 
+
+        [Display(Name = "Races")]
+        public List<RaceModel>? Races { get; set; }
+
+
     }
 }

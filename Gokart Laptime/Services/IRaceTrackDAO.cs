@@ -9,5 +9,7 @@ namespace Gokart_Laptime.Services
 
         RaceTrackModel GetRaceTrackById(int id);
         bool UpdateRaceTrack(RaceTrackModel raceTrack);
+
+        List<RaceModel> GetRaceTrackRacesById(int raceTrackId);
     }
 }
