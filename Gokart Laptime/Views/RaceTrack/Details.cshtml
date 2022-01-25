@@ -1,0 +1,108 @@
+﻿@model Gokart_Laptime.Models.RaceTrackModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+<div class="col-xl-8 mb-3 mx-auto card bg-dark border-secondary text-light">
+    <div class="card-header bg-danger">
+        <span class="fw-bold fs-5">@Html.DisplayFor(model => model.RaceTrackId) - @Html.DisplayFor(model => model.RaceTrackName)</span>
+    </div>
+    <div class="card-body">
+        <div class="row g-2 justify-content-md-start">
+            <div class="col-md-3">
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.Length)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.Length)
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.Address)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.Address)
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.Description)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.Description)
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.Races)</span>
+            </div>
+            <div class="col mb-2">
+                @Html.DisplayFor(model => model.Races.Count)
+            </div>
+            
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.RaceTrackBestLapTime)</span>
+            </div>
+            <div class="col mb-2">
+                @Html.DisplayFor(model => model.RaceTrackBestLapTime)
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 class="text-md-center mb-3">Races</h2>
+
+@if (Model.Races.Count() > 0)
+{
+    @foreach (var race in Model.Races)
+    {
+        <div class="table-responsive rounded col-xl-8 mx-auto mb-3">
+            <table class="table text-light border-secondary text-nowrap mb-3 table-bordered">
+                <thead class="bg-danger">
+                    <tr>
+                        <th colspan="2">
+                            <span class="me-2">@Html.DisplayNameFor(model => race.RaceId): @Html.DisplayFor(model => race.RaceId)</span>
+                            <a asp-controller="Race" asp-action="Details" asp-route-id="@race.RaceId" class="text-white me-2"><i class="fas fa-eye"></i></a>
+                            <a asp-controller="Race" asp-action="Edit" asp-route-id="@race.RaceId" class="text-light"><i class="fas fa-edit"></i></a>
+
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">@Html.DisplayNameFor(model => race.RaceTrackName): @Html.DisplayFor(model => race.RaceTrackName)</th>
+                    </tr>
+                    <tr>
+                        <th colspan="2">@Html.DisplayNameFor(model => race.RaceDate): @Html.DisplayFor(model => race.RaceDate)</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    @if (race.Racers is not null)
+                    {
+                        @foreach (var racer in race.Racers)
+                        {
+                            <tr>
+                                <td class="bg-secondary" colspan="2">@racer.RacerName</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 1%" class="text-start">Laps</td>
+                                <td class="font-monospace">@racer.Laptimes.Count</td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">@Html.DisplayNameFor(model => racer.BestLapTime)</td>
+                                <td class="font-monospace text-success">@Html.DisplayFor(model => racer.BestLapTime)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-start">@Html.DisplayNameFor(model => racer.AverageLapTime)</td>
+                                <td class="font-monospace text-warning">@Html.DisplayFor(model => racer.AverageLapTime)</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}

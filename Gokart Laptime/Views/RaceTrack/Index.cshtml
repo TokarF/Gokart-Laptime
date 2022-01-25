@@ -23,52 +23,52 @@
 {
     @foreach (var raceTrack in Model)
     {
-    <div class="col-xl-8 mb-3 mx-auto card bg-dark border-secondary text-light">
-        <div class="card-header bg-danger">
-            <span class="fw-bold fs-5">@Html.DisplayFor(model => raceTrack.RaceTrackId) - @Html.DisplayFor(model => raceTrack.RaceTrackName)</span>
-        </div>
-        <div class="card-body">
-            <div class="row g-2 justify-content-md-start">
-                <div class="col-md-3">
-                    <span class="fw-bold">@Html.DisplayNameFor(model => model.Length)</span>
-                </div>
-                <div class="col">
-                    @Html.DisplayFor(model => raceTrack.Length)
-                </div>
-
-                <div class="w-100"></div>
-
-                <div class="col-md-3">
-                    <span class="fw-bold">@Html.DisplayNameFor(model => model.Address)</span>
-                </div>
-                <div class="col">
-                    @Html.DisplayFor(model => raceTrack.Address)
-                </div>
-
-                <div class="w-100"></div>
-
-                <div class="col-md-3">
-                    <span class="fw-bold">@Html.DisplayNameFor(model => model.Description)</span>
-                </div>
-                <div class="col">
-                    @Html.DisplayFor(model => raceTrack.Description)
-                </div>
-
-                <div class="w-100"></div>
-
-                <div class="col-md-3">
-                    <span class="fw-bold">@Html.DisplayNameFor(model => model.Races)</span>
-                </div>
-                <div class="col mb-2">
-                    @Html.DisplayFor(model => raceTrack.Races.Count)
-                </div>
+        <div class="col-xl-8 mb-3 mx-auto card bg-dark border-secondary text-light">
+            <div class="card-header bg-danger">
+                <span class="fw-bold fs-5">@Html.DisplayFor(model => raceTrack.RaceTrackId) - @Html.DisplayFor(model => raceTrack.RaceTrackName)</span>
             </div>
-              <div class="border-secondary card-footer text-center pt-3">
+            <div class="card-body">
+                <div class="row g-2 justify-content-md-start">
+                    <div class="col-md-3">
+                        <span class="fw-bold">@Html.DisplayNameFor(model => model.Length)</span>
+                    </div>
+                    <div class="col">
+                        @Html.DisplayFor(model => raceTrack.Length)
+                    </div>
+
+                    <div class="w-100"></div>
+
+                    <div class="col-md-3">
+                        <span class="fw-bold">@Html.DisplayNameFor(model => model.Address)</span>
+                    </div>
+                    <div class="col">
+                        @Html.DisplayFor(model => raceTrack.Address)
+                    </div>
+
+                    <div class="w-100"></div>
+
+                    <div class="col-md-3">
+                        <span class="fw-bold">@Html.DisplayNameFor(model => model.Description)</span>
+                    </div>
+                    <div class="col">
+                        @Html.DisplayFor(model => raceTrack.Description)
+                    </div>
+
+                    <div class="w-100"></div>
+
+                    <div class="col-md-3">
+                        <span class="fw-bold">@Html.DisplayNameFor(model => model.Races)</span>
+                    </div>
+                    <div class="col mb-2">
+                        @Html.DisplayFor(model => raceTrack.Races.Count)
+                    </div>
+                </div>
+                <div class="border-secondary card-footer text-center pt-3">
                     <a asp-action="Details" asp-route-id="@raceTrack.RaceTrackId" class="btn btn-outline-info me-2"><i class="fas fa-eye me-1"></i>View</a>
                     <a asp-action="Edit" asp-route-id="@raceTrack.RaceTrackId" class="btn btn-outline-warning "><i class="fas fa-edit me-1"></i>Edit</a>
-              </div>
+                </div>
+            </div>
         </div>
-    </div>
     }
 }
 else

@@ -10,9 +10,15 @@ namespace Gokart_Laptime.Controllers
     public class RaceTrackController : Controller
     {
         private readonly IRaceTrackDAO raceTrackDAO;
-        public RaceTrackController(IRaceTrackDAO raceTrackDAO)
+        private readonly IRaceDAO raceDAO;
+        private readonly IRacerDAO racerDAO;
+        private readonly ILapTimeDAO lapTimeDAO;
+        public RaceTrackController(IRaceTrackDAO raceTrackDAO, IRaceDAO raceDAO, IRacerDAO racerDAO, ILapTimeDAO lapTimeDAO)
         {
             this.raceTrackDAO = raceTrackDAO;
+            this.raceDAO = raceDAO;
+            this.racerDAO = racerDAO;
+            this.lapTimeDAO = lapTimeDAO;
         }
         // GET: RaceTrackController
         [Authorize]
@@ -39,7 +45,31 @@ namespace Gokart_Laptime.Controllers
         // GET: RaceTrackController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            RaceTrackModel raceTrack = raceTrackDAO.GetRaceTrackById(id);
+
+
+            if (raceTrack is not null)
+            {
+                raceTrack.Races = raceTrackDAO.GetRaceTrackRacesById(raceTrack.RaceTrackId);
+                
+                foreach (var race in raceTrack.Races)
+                {
+                    race.Racers = racerDAO.GetRacersByRaceID(race.RaceId);
+                    foreach (var racer in race.Racers)
+                    {
+                        racer.Laptimes = lapTimeDAO.GetRacerLaptimeByRaceAndRacerId(race.RaceId, racer.RacerId);
+                    }
+                }
+
+                return View(raceTrack);
+            }
+            else
+            {
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Racetrack is not found!" });
+                return RedirectToAction(nameof(Index));
+            }
+
+
         }
 
         // GET: RaceTrackController/Create

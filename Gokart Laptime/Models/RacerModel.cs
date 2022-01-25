@@ -40,7 +40,7 @@ namespace Gokart_Laptime.Models
         {
             get
             {
-                if (this.Laptimes.Count > 0)
+                if (Laptimes.Count > 0)
                 {
                     return this.Laptimes.Select(x => x.LapTime).Min();
                 }

@@ -38,23 +38,24 @@ namespace Gokart_Laptime.Models
 
         [Display(Name = "Best Lap")]
         [DisplayFormat(NullDisplayText = "N/A")]
-        public string? RaceBestLapTime
+        public dynamic? RaceBestLapTime
         {
             get 
             {
                 if (Racers is not null)
                 {
                     var bestLap = Racers.Where(racer => racer.Laptimes.Count > 0)
-                                         .Select(racer => new {
+                                         .Select(racer => new
+                                         {
                                              RacerName = racer.RacerName,
                                              LapTime = racer.BestLapTime
                                          }).MinBy(x => x.LapTime);
-                    
-                    return string.Format("{0:mm\\:ss\\.fff} - {1}", bestLap?.LapTime, bestLap?.RacerName);
+
+                    return bestLap;
                 }
                 else
                 {
-                    return "N/A";
+                    return null;
                 }
             }
         }

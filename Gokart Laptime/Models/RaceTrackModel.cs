@@ -34,10 +34,43 @@ namespace Gokart_Laptime.Models
         [DisplayFormat(NullDisplayText = "N/A")]
         public string? Description { get; set; }
 
-
-
         [Display(Name = "Races")]
         public List<RaceModel>? Races { get; set; }
+
+        [Display(Name = "Best Lap")]
+        [DisplayFormat(NullDisplayText = "N/A")]
+        public string? RaceTrackBestLapTime
+        {
+            get
+            {
+                if (Races is not null)
+                {
+                    //  var racetrackBestLap = (from race in Races
+                    //                          from racer in race.Racers
+                    //                          where race.Racers is not
+                    //from lapTimes in racer.Laptimes
+                    //where lapTimes is not null
+                    //select new { RacerName = racer.RacerName, RaceDate = race.RaceDate, Laptime = lapTimes.LapTime }).MinBy(x => x.Laptime);
+
+                    //return racetrackBestLap;
+                    //return string.Format("{0:yyyy-MM-dd} - {1} - {2:mm\\:ss\\.fff}", racetrackBestLap.RaceDate, racetrackBestLap.RacerName, racetrackBestLap.Laptime);
+
+                    var raceTrackBestLap = (from race in Races
+                                            from racer in race.Racers
+                                            where race.Racers is not null
+                                            from lapTimes in racer.Laptimes
+                                            where racer.Laptimes is not null
+                                            select new { RacerName = racer.RacerName, RaceDate = race.RaceDate, LapTime = lapTimes.LapTime }).MinBy(x => x.LapTime);
+
+                    return string.Format("{0:yyyy-MM-dd} - {1} - {2:mm\\:ss\\.fff}", raceTrackBestLap.RaceDate, raceTrackBestLap.RacerName, raceTrackBestLap.LapTime);
+
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
 
     }
