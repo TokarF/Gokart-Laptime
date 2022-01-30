@@ -56,22 +56,27 @@ namespace Gokart_Laptime.Controllers
 
 
                 Random random = new Random();
-                var data = new
+
+                if(race.Racers.Count > 0)
                 {
-                    labels = Enumerable.Range(1, race.Racers.Select(x => x.Laptimes.Count).Max()),
-                    datasets = race.Racers.Select(racer => new
+                    var data = new
                     {
-                        label = racer.RacerName,
-                        data = racer.Laptimes.Select(lapTime => lapTime.LapTime.TotalSeconds),
-                        borderColor = string.Format("#{0:X6}", random.Next(0x1000000)),
-                    })
-                };
+                        labels = Enumerable.Range(1, race.Racers.Select(x => x.Laptimes.Count).Max()),
+                        datasets = race.Racers.Select(racer => new
+                        {
+                            label = racer.RacerName,
+                            data = racer.Laptimes.Select(lapTime => lapTime.LapTime.TotalSeconds),
+                            borderColor = string.Format("#{0:X6}", random.Next(0x1000000)),
+                        })
+                    };
+                    string output = JsonConvert.SerializeObject(data);
+                    ViewBag.Data = output;
 
-                string output = JsonConvert.SerializeObject(data);
+                }
 
-         
+
+
                 ViewBag.Information = TempData["Information"];
-                ViewBag.Data = output;
                 return View(race);
             }
             else
@@ -103,7 +108,7 @@ namespace Gokart_Laptime.Controllers
 
                 if (raceId != -1)
                 {
-                    racerDAO.AddRacer(Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value), raceId);
+                    racerDAO.AddRacers(new List<int>(Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value)), raceId);
                     TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "Race has been successfully added!" });
                     return RedirectToAction(nameof(Index));
                 }
@@ -194,24 +199,47 @@ namespace Gokart_Laptime.Controllers
             return View(raceRacersViewModel);
         }
 
-        public PartialViewResult AddRacer(int selectedRacerId, int raceId)
+        public ActionResult AddRacers(int raceId, List<int> racersId)
         {
-            racerDAO.AddRacer(selectedRacerId, raceId);
-            
-            RaceRacersViewModel raceRacersViewModel = new RaceRacersViewModel
+            try
             {
-                Race = raceDAO.GetRaceById(raceId),
-                IncludedRacers = racerDAO.GetRacersByRaceID(raceId),
-                NotIncludedRacers = racerDAO.GetAllRacers(raceId)
-            };
+                if (racersId .Count > 0)
+                {
+                    racerDAO.AddRacers(racersId, raceId);
+                    ViewBag.Information = JsonConvert.SerializeObject(new { Type = "success", Message = "Racer(s) has been added to the race!" });
+                }
+                else
+                {
+                    ViewBag.Information = JsonConvert.SerializeObject(new { Type = "warning", Message = "Please select a racer to add!" });
+                }
 
-            return PartialView("_RaceRacers", raceRacersViewModel);
+                RaceRacersViewModel raceRacersViewModel = new RaceRacersViewModel
+                {
+                    Race = raceDAO.GetRaceById(raceId),
+                    IncludedRacers = racerDAO.GetRacersByRaceID(raceId),
+                    NotIncludedRacers = racerDAO.GetAllRacers(raceId)
+                };
 
+                return View("Racers", raceRacersViewModel);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public PartialViewResult RemoveRacer(int racerId, int raceId)
+        public ActionResult RemoveRacer(int racerId, int raceId)
         {
-            racerDAO.RemoveRacer(raceId, racerId);
+            if (racerDAO.racerHasLaptimes(raceId, racerId))
+            {
+                ViewBag.Information = JsonConvert.SerializeObject(new { Type = "danger", Message = "Racer with laptimes cannot be deleted!" });
+            }
+            else
+            {
+                racerDAO.RemoveRacer(raceId, racerId);
+                ViewBag.Information = JsonConvert.SerializeObject(new { Type = "success", Message = "Racer has been removed!" });
+            }
 
             RaceRacersViewModel raceRacersViewModel = new RaceRacersViewModel
             {
@@ -220,7 +248,7 @@ namespace Gokart_Laptime.Controllers
                 NotIncludedRacers = racerDAO.GetAllRacers(raceId)
             };
 
-            return PartialView("_RaceRacers", raceRacersViewModel);
+            return View("Racers", raceRacersViewModel);
 
         }
 

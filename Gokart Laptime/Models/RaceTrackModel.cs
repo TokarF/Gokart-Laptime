@@ -45,15 +45,6 @@ namespace Gokart_Laptime.Models
             {
                 if (Races is not null)
                 {
-                    //  var racetrackBestLap = (from race in Races
-                    //                          from racer in race.Racers
-                    //                          where race.Racers is not
-                    //from lapTimes in racer.Laptimes
-                    //where lapTimes is not null
-                    //select new { RacerName = racer.RacerName, RaceDate = race.RaceDate, Laptime = lapTimes.LapTime }).MinBy(x => x.Laptime);
-
-                    //return racetrackBestLap;
-                    //return string.Format("{0:yyyy-MM-dd} - {1} - {2:mm\\:ss\\.fff}", racetrackBestLap.RaceDate, racetrackBestLap.RacerName, racetrackBestLap.Laptime);
 
                     var raceTrackBestLap = (from race in Races
                                             from racer in race.Racers

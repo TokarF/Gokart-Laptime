@@ -8,9 +8,10 @@ namespace Gokart_Laptime.Services
 
         List<RacerModel> GetAllRacers(int raceId);
 
-        void AddRacer(int selectedRacerId, int raceId);
+        void AddRacers(List<int> racersId, int raceId);
 
         void RemoveRacer(int raceId, int racerId);
+        bool racerHasLaptimes(int raceId, int racerId);
 
     }
 }

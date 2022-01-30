@@ -78,7 +78,7 @@ namespace Gokart_Laptime.Services
             return racers;
         }
 
-        public void AddRacer(int selectedRacerId, int raceId)
+        public void AddRacers(List<int> racersId, int raceId)
         {
             try
             {
@@ -89,9 +89,13 @@ namespace Gokart_Laptime.Services
                         command.Connection = connection;
                         command.CommandText = "INSERT INTO dbo.Racers (race_id, racer_id) VALUES (@race_id, @racer_id)";
                         connection.Open();
-                        command.Parameters.AddWithValue("@race_id", raceId);
-                        command.Parameters.AddWithValue("@racer_id", selectedRacerId);
-                        command.ExecuteNonQuery();
+                        foreach (int racerId in racersId)
+                        {
+                            command.Parameters.AddWithValue("@race_id", raceId);
+                            command.Parameters.AddWithValue("@racer_id", racerId);
+                            command.ExecuteNonQuery();
+                            command.Parameters.Clear();
+                        }
                     }
                 }
 
@@ -124,6 +128,42 @@ namespace Gokart_Laptime.Services
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        public bool racerHasLaptimes(int raceId, int racerId)
+        {
+            bool racerLaptimes = false;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand())
+                {
+                    try
+                    {
+                        command.Connection = connection;
+                        command.CommandText = "SELECT LT.* FROM dbo.Laptimes LT WHERE LT.race_id = @raceId AND LT.racer_id = @racerId";
+                        command.Parameters.AddWithValue("@raceId", raceId);
+                        command.Parameters.AddWithValue("@racerId", racerId);
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            racerLaptimes = reader.HasRows;
+                        }
+
+                    }
+
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+
+                }
+            }
+
+            return racerLaptimes;
         }
     }
 }

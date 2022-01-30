@@ -38,7 +38,7 @@ namespace Gokart_Laptime.Models
 
         [Display(Name = "Best Lap")]
         [DisplayFormat(NullDisplayText = "N/A")]
-        public dynamic? RaceBestLapTime
+        public string? RaceBestLapTime
         {
             get 
             {
@@ -51,7 +51,7 @@ namespace Gokart_Laptime.Models
                                              LapTime = racer.BestLapTime
                                          }).MinBy(x => x.LapTime);
 
-                    return bestLap;
+                    return string.Format("{0} - {1:mm\\:ss\\.fff}", bestLap?.RacerName, bestLap?.LapTime);
                 }
                 else
                 {

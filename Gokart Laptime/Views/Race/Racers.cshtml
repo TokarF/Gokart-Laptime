@@ -1,4 +1,4 @@
-﻿@model Gokart_Laptime.ViewModels.RaceRacersViewModel
+﻿  @model Gokart_Laptime.ViewModels.RaceRacersViewModel
 
 @{
     ViewData["Title"] = "Racers";
@@ -8,12 +8,12 @@
 
 <div class="col-xl-8 mb-3 mx-auto card bg-dark border-secondary text-light">
     <div class="card-header bg-danger">
-          <span class="fw-bold fs-5">@Html.DisplayNameFor(model => model.Race.RaceId): @Html.DisplayFor(model => model.Race.RaceId)</span>
+        <span class="fw-bold fs-5">@Html.DisplayNameFor(model => model.Race.RaceId): @Html.DisplayFor(model => model.Race.RaceId)</span>
     </div>
     <div class="card-body">
         <div class="row g-2 justify-content-md-start">
             <div class="col-md-3">
-               <span class="fw-bold">@Html.DisplayNameFor(model => model.Race.RaceTrackName)</span> 
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.Race.RaceTrackName)</span>
             </div>
             <div class="col">
                 @Html.DisplayFor(model => model.Race.RaceTrackName)
@@ -22,7 +22,7 @@
             <div class="w-100"></div>
 
             <div class="col-md-3">
-                 <span class="fw-bold">@Html.DisplayNameFor(model => model.Race.RaceDate)</span>
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.Race.RaceDate)</span>
             </div>
             <div class="col">
                 @Html.DisplayFor(model => model.Race.RaceDate)
@@ -31,7 +31,7 @@
             <div class="w-100"></div>
 
             <div class="col-md-3">
-                 <span class="fw-bold">@Html.DisplayNameFor(model => model.Race.Description)</span>
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.Race.Description)</span>
             </div>
             <div class="col">
                 @Html.DisplayFor(model => model.Race.Description)
@@ -41,7 +41,85 @@
 </div>
 
 <div id="racers">
-    <partial name="_RaceRacers"  />
+    <form asp-action="AddRacers" class="row g-2 justify-content-md-center mb-3">
+        <input name="raceId" type="hidden" value="@Model.Race.RaceId" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-md-6 col-xl-4">
+            <select name="racersId" class="w-100 border rounded border-secondary selectpicker" multiple="" data-size="10" title="Select racers" data-style="btn-dark bg-dark" aria-label="Default select example" data-dropup-auto="false" tabindex="null">
+                @for (var i = 0; i < Model.NotIncludedRacers.Count(); i++)
+                {
+                    <option class="bg-dark text-light" value="@Model.NotIncludedRacers[i].RacerId">@Model.NotIncludedRacers[i].RacerName</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6 col-xl-4">
+            <button type="submit" @(@Model.NotIncludedRacers.Count == 0 ? "disabled" : "") class="col-sm-4 w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>Add Racers</button>
+        </div>
+    </form>
+
+    <div class="table-responsive rounded col-xl-8 m-auto">
+        <table class="table text-light table-bordered border-secondary text-nowrap ">
+            <thead class="bg-danger text-center">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IncludedRacers.FirstOrDefault().RacerId)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IncludedRacers.FirstOrDefault().RacerName)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="text-center align-middle">
+                @foreach (var item in Model.IncludedRacers)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RacerId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RacerName)
+                        </td>
+                        <td>
+                            <button onclick="RemoveRacerModal(this)" class="btn btn-outline-danger" data-racerid="@item.RacerId" data-raceid="@item.RaceId" data-bs-toggle="modal" data-bs-target="#removeRacerModal"><i class="fas fa-times"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="removeRacerModal" tabindex="-1" aria-labelledby="exampleModalCenterTitle" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered text-light">
+            <div class="modal-content  border-secondary bg-dark">
+                <div class="modal-header bg-danger">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Remove Racer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you really would like to remove the racer?</p>
+                </div>
+                <div class="modal-footer text-center">
+                    <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">No</button>
+                    <form asp-action="RemoveRacer">
+                        <input type="hidden" name="raceId" value="@Model.Race.RaceId"/>
+                        <input type="hidden" name="racerId" />
+                        <button  type="submit" class="btn btn-outline-danger">Yes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            document.querySelector(".dropdown-menu").classList.add("bg-dark", "border", "border-secondary");
+        });
+    </script>
+
 
 </div>
 
@@ -50,22 +128,6 @@
     let racertoDeleteId;
     let raceId;
 
-    function AddRacer()
-    {
-        let sRacerId = document.getElementById("racerSelect").value;
-        let rId = document.getElementById("raceId").value;
-        $.ajax({
-            type: "POST",
-            url: "/Race/AddRacer",
-            data: {selectedRacerId: sRacerId, raceId: rId},
-            success: function (data) {
-                $("#racers").html(data);
-            },
-            error: function() {
-                console.log(JSON.stringify(error));
-            }
-        });
-    }
 
     function RemoveRacerModal(element)
     {
@@ -73,24 +135,26 @@
         console.log(element.getAttribute('data-raceid'));
         racertoDeleteId = element.getAttribute('data-racerid');
         raceId = element.getAttribute('data-raceid');
+        document.querySelector("[name='racerId']").value = element.getAttribute('data-racerid');
     }
 
     function RemoveRacer()
     {
 
-        $.ajax({
-            type: "POST",
-            url: "/Race/RemoveRacer",
-            data: {racerId: racertoDeleteId, raceId: raceId},
-            success: function (data) {
-                $("#racers").html(data);
-                $('.modal-backdrop').remove();
+    $.ajax({
+    type: "POST",
+    url: "/Race/RemoveRacer",
+    data: {racerId: racertoDeleteId, raceId: raceId},
+    success: function (data) {
+    $("#racers").html(data);
+    $('.modal-backdrop').remove();
 
-            },
-            error: function() {
-                console.log(JSON.stringify(error));
-            }
-        });
+    },
+    error: function() {
+    console.log(JSON.stringify(error));
     }
+    });
+    }
+
 
 </script>
