@@ -1,0 +1,54 @@
+﻿@model Gokart_Laptime.Models.UserModel
+
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<div class="col-xl-8 mb-3 mx-auto card bg-dark border-secondary text-light">
+    <div class="card-header bg-danger">
+        <span class="fw-bold fs-5">User Data</span>
+    </div>
+    <div class="card-body">
+        <div class="row g-2 justify-content-md-start">
+            <div class="col-md-3">
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.UserName)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.UserName)
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.Email)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.Email)
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.Password)</span>
+            </div>
+            <div class="col">
+                <a class="text-light text-decoration-none" asp-controller="User" asp-action="ChangePassword">Change Password</a>
+            </div>
+
+            <div class="w-100"></div>
+
+            <div class="col-md-3">
+                <span class="fw-bold">@Html.DisplayNameFor(model => model.RegisteredAt)</span>
+            </div>
+            <div class="col">
+                @Html.DisplayFor(model => model.RegisteredAt)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-xl-8 mx-auto row justify-content-center mb-3 gap-2 mb-3">
+    <div class="col-12 col-sm px-0">
+        <a asp-controller="Home" asp-action="Index" class="w-100 btn btn-outline-info"><i class="fas fa-angle-double-left me-2"></i>Go Back</a>
+    </div>
+</div>

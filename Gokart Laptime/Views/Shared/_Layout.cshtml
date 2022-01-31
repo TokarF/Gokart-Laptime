@@ -1,4 +1,5 @@
 ﻿@using Newtonsoft.Json
+@using System.Security.Claims
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +32,7 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            <a class="nav-link disabled" href="#"><i class="fas fa-user-alt me-2"></i>@User.Identity.Name</a>
+                            <a class="nav-link" asp-controller="User" asp-action="UserProfile" asp-route-id="@User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value"><i class="fas fa-user-alt me-2"></i>@User.Identity.Name</a>
                         </li>
                         <li class="nav-item">
                             <a asp-controller="RaceTrack" asp-action="Index" class="nav-link">Racetracks</a>
@@ -74,7 +75,7 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item flex-grow-1">
-                                <a class="nav-link px-sm-0 px-2 text-light disabled"><i class="fas fa-user-alt me-2"></i>@User.Identity.Name</a>
+                                <a asp-controller="User" asp-action="UserProfile" asp-route-id="@User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value" class="nav-link px-sm-0 px-2 text-light"><i class="fas fa-user-alt me-2"></i>@User.Identity.Name</a>
                             </li>
                             <li class="nav-item flex-grow-1">
                                 <a asp-controller="RaceTrack" asp-action="Index" class="nav-link  px-sm-0 px-2 text-light">Racetracks</a>
@@ -135,7 +136,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script>
-        $('select').selectpicker();
+
    
 
     </script>

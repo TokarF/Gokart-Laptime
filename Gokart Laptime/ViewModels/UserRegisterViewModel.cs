@@ -20,7 +20,7 @@ namespace Gokart_Laptime.Models
         [Required(ErrorMessage = "The password is required")]
         [DataType(DataType.Password)]
         [StringLength(50, MinimumLength = 8, ErrorMessage = "The password has to be between 8 - 20 charaters")]
-                public string Password { get; set; }
+        public string Password { get; set; }
 
         [Display(Name = "Password again")]
         [DataType(DataType.Password)]

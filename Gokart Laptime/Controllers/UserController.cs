@@ -2,6 +2,7 @@
 using Gokart_Laptime.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -122,25 +123,51 @@ namespace Gokart_Laptime.Controllers
 
 
 
-        // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
+        // GET: UserController/User/5
+        [Authorize]
+        public ActionResult UserProfile(int id)
+        {
+            if (id != Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value))
+            {
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "You are not allowed to do that!" });
+                return RedirectToAction("Index", "Home");
+            }
+
+            UserModel user = userDAO.GetUserDetailsById(id);
+            return View(user);
+        }
+
+        // GET 
+        [HttpGet]
+        [Authorize]
+        public ActionResult ChangePassword()
         {
             return View();
         }
 
-        // POST: UserController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [Authorize]
+        public ActionResult ChangePassword(ChangePasswordViewModel changePasswordViewModel)
         {
-            try
+            string userPassword = userDAO.GetUserDetailsById(Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value)).Password;
+
+            if (!BCrypt.Net.BCrypt.Verify(changePasswordViewModel.CurrentPassword, userPassword))
             {
-                return RedirectToAction(nameof(Index));
+                ModelState.AddModelError("CurrentPassword", "The current password is not appropriate");
             }
-            catch
+
+            if (!ModelState.IsValid)
             {
-                return View();
+                return View(changePasswordViewModel);
             }
+
+            else
+            {
+                userDAO.UpdatePassword(Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value), changePasswordViewModel);
+            }
+
+            
+            return View();
         }
     }
 }

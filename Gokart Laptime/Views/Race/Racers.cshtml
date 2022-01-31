@@ -117,6 +117,7 @@
     <script>
         window.addEventListener('load', function() {
             document.querySelector(".dropdown-menu").classList.add("bg-dark", "border", "border-secondary");
+            $('select').selectpicker();
         });
     </script>
 
@@ -125,9 +126,6 @@
 
 
 <script>
-    let racertoDeleteId;
-    let raceId;
-
 
     function RemoveRacerModal(element)
     {
@@ -137,24 +135,4 @@
         raceId = element.getAttribute('data-raceid');
         document.querySelector("[name='racerId']").value = element.getAttribute('data-racerid');
     }
-
-    function RemoveRacer()
-    {
-
-    $.ajax({
-    type: "POST",
-    url: "/Race/RemoveRacer",
-    data: {racerId: racertoDeleteId, raceId: raceId},
-    success: function (data) {
-    $("#racers").html(data);
-    $('.modal-backdrop').remove();
-
-    },
-    error: function() {
-    console.log(JSON.stringify(error));
-    }
-    });
-    }
-
-
 </script>

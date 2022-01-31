@@ -108,7 +108,7 @@ namespace Gokart_Laptime.Controllers
 
                 if (raceId != -1)
                 {
-                    racerDAO.AddRacers(new List<int>(Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value)), raceId);
+                    racerDAO.AddRacers(new List<int> { Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value) }, raceId);
                     TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "Race has been successfully added!" });
                     return RedirectToAction(nameof(Index));
                 }
