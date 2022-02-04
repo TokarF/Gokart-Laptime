@@ -4,16 +4,16 @@ namespace Gokart_Laptime.Models
 {
     public class UserLoginViewModel
     {
-        [Display(Name = "Email address")]
-        [Required(ErrorMessage = "The email address is required")]
+        [Display(Name = "Email address", Prompt = "EmailPlaceHolder")]
+        [Required(ErrorMessage = "EmailAddressRequired")]
         [DataType(DataType.EmailAddress)]
-        [StringLength(50, MinimumLength = 8, ErrorMessage = "The email adress has to be between 8 - 50 charaters")]
+        [StringLength(50, MinimumLength = 8, ErrorMessage = "EmailAddressLength")]
         public string Email { get; set; }
 
-        [Display(Name = "Password")]
-        [Required(ErrorMessage = "The password is required")]
+        [Display(Name = "Password", Prompt = "PasswordPlaceHolder")]
+        [Required(ErrorMessage = "PasswordRequired")]
         [DataType(DataType.Password)]
-        [StringLength(50, MinimumLength = 8, ErrorMessage = "The password has to be between 8 - 20 charaters")]
+        [StringLength(50, MinimumLength = 8, ErrorMessage = "PasswordLength")]
         public string Password { get; set; }
     }
 }

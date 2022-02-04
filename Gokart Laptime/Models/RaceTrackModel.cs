@@ -9,28 +9,29 @@ namespace Gokart_Laptime.Models
         [DisplayFormat(DataFormatString = "{0:000}")]
         public int RaceTrackId { get; set; }
 
-        [Display(Name = "Racetrack name")]
-        [Required(ErrorMessage = "The racetrack name is required")]
+        [Display(Name = "Racetrack name", Prompt = "RaceTrackNamePlaceHolder")]
+        [Required(ErrorMessage = "RacetrackNameRequired")]
         [DataType(DataType.Text)]
-        [StringLength(maximumLength: 100, MinimumLength = 10, ErrorMessage = "The racetrack name has to be between 10 - 100 charaters")]
+        [StringLength(maximumLength: 100, MinimumLength = 10, ErrorMessage = "RacetrackNameLength")]
         public string RaceTrackName { get; set; }
 
 
-        [Display(Name = "Length")]
-        [Required(ErrorMessage = "The racetrack length is required")]
-        [Range(minimum: 100, maximum: 5000, ErrorMessage = "The racetrack length has to be between 100 - 5000")]
+        [Display(Name = "Length", Prompt = "RaceTrackLengthPlaceHolder")]
+        [Required(ErrorMessage = "RacetrackLengthRequired")]
+        [Range(minimum: 100, maximum: 5000, ErrorMessage = "RacetrackLength")]
+        [DataType(DataType.Currency, ErrorMessage = "RacetrackLengthValidNumber")]
         [DisplayFormat(DataFormatString = "{0,4} m")]
         public int Length { get; set; }
 
-        [Display(Name = "Address")]
-        [Required(ErrorMessage = "The racetrack address is required")]
+        [Display(Name = "Address", Prompt = "RaceTrackAddressPlaceHolder")]
+        [Required(ErrorMessage = "RaceTrackAddressRequired")]
         [DataType(DataType.Text)]
-        [StringLength(maximumLength: 200, MinimumLength = 10, ErrorMessage = "The racetrack address has to be between 10 - 200 charaters")]
+        [StringLength(maximumLength: 200, MinimumLength = 10, ErrorMessage = "RacetrackAddrassLength")]
         public string Address { get; set; }
 
-        [Display(Name = "Description")]
+        [Display(Name = "Description", Prompt = "RaceTrackDescriptionPlaceHolder")]
         [DataType(DataType.MultilineText)]
-        [StringLength(300, MinimumLength = 10, ErrorMessage = "The racetrack description has to be between 10 - 300 charaters")]
+        [StringLength(300, MinimumLength = 10, ErrorMessage = "RacetrackDescriptionLength")]
         [DisplayFormat(NullDisplayText = "N/A")]
         public string? Description { get; set; }
 

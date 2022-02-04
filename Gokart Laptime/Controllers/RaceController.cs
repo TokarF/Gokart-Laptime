@@ -4,6 +4,7 @@ using Gokart_Laptime.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -18,15 +19,19 @@ namespace Gokart_Laptime.Controllers
         private readonly IRaceDAO raceDAO;
         private readonly IRacerDAO racerDAO;
         private readonly ILapTimeDAO lapTimeDAO;
-        public RaceController(IRaceDAO raceDAO, IRaceTrackDAO raceTrackDAO, IRacerDAO racerDAO, ILapTimeDAO lapTimeDAO)
+        private readonly IHtmlLocalizer<RaceController> localizer;
+
+        public RaceController(IRaceDAO raceDAO, IRaceTrackDAO raceTrackDAO, IRacerDAO racerDAO, ILapTimeDAO lapTimeDAO, IHtmlLocalizer<RaceController> localizer)
         {
             this.raceDAO = raceDAO;
             this.raceTrackDAO = raceTrackDAO;
             this.racerDAO = racerDAO;
             this.lapTimeDAO = lapTimeDAO;
+            this.localizer = localizer;
+
         }
         // GET: RaceController
-        public ActionResult Index()
+        public ActionResult Index(string? searchRaceTrack)
         {
             List<RaceModel> races = raceDAO.GetAllRaces();
             races.ForEach(race => race.Racers = racerDAO.GetRacersByRaceID(race.RaceId));
@@ -40,6 +45,7 @@ namespace Gokart_Laptime.Controllers
                 }
             }
 
+            if (searchRaceTrack is not null) races = races.FindAll(race => race.RaceTrackName.ToLower().Contains(searchRaceTrack));
 
             ViewBag.Information = TempData["Information"];
             return View(races);
@@ -81,7 +87,7 @@ namespace Gokart_Laptime.Controllers
             }
             else
             {
-                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Sorry, something went wrong, we can't find the race!" });
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["CantFindRace"].Value });
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -109,12 +115,12 @@ namespace Gokart_Laptime.Controllers
                 if (raceId != -1)
                 {
                     racerDAO.AddRacers(new List<int> { Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value) }, raceId);
-                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "Race has been successfully added!" });
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = localizer["RaceAddSuccess"].Value });
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Sorry, something went wrong, couldn't add race!" });
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["RaceAddFail"].Value });
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -130,13 +136,13 @@ namespace Gokart_Laptime.Controllers
             RaceModel race = raceDAO.GetRaceById(id);
             if (race is null)
             {
-                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Race is not found!" });
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["CantFindRace"].Value });
                 return RedirectToAction(nameof(Index));
   
             }
             else if(race.Created_By != Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value))
             {
-                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "You are not allowed to do that!" });
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["NotAllowed"].Value });
                 return RedirectToAction(nameof(Index));
             }
 
@@ -161,20 +167,20 @@ namespace Gokart_Laptime.Controllers
 
                 if (raceDAO.UpdateRace(race))
                 {
-                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "Race has been successfully updated!" });
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = localizer["RaceUpdateSuccess"].Value });
                     return RedirectToAction(nameof(Index));
 
                 }
 
                 else
                 {
-                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Sorry, something went wrong, couldn't update racetrack!" });
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["RaceUpdateFail"].Value });
                     return RedirectToAction(nameof(Index));
                 }
             }
             catch
             {
-                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Sorry, something went wrong, couldn't update racetrack!" });
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["RaceUpdateFail"].Value });
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -185,7 +191,7 @@ namespace Gokart_Laptime.Controllers
 
             if (race.Created_By != Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value))
             {
-                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "You are not allowed to do that!" });
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["NotAllowed"].Value });
                 return RedirectToAction("Details", new { id = raceId });
             }
 
@@ -206,11 +212,11 @@ namespace Gokart_Laptime.Controllers
                 if (racersId .Count > 0)
                 {
                     racerDAO.AddRacers(racersId, raceId);
-                    ViewBag.Information = JsonConvert.SerializeObject(new { Type = "success", Message = "Racer(s) has been added to the race!" });
+                    ViewBag.Information = JsonConvert.SerializeObject(new { Type = "success", Message = localizer["RacersAddedSuccess"].Value });
                 }
                 else
                 {
-                    ViewBag.Information = JsonConvert.SerializeObject(new { Type = "warning", Message = "Please select a racer to add!" });
+                    ViewBag.Information = JsonConvert.SerializeObject(new { Type = "warning", Message = localizer["SelectRacer"].Value });
                 }
 
                 RaceRacersViewModel raceRacersViewModel = new RaceRacersViewModel
@@ -225,7 +231,8 @@ namespace Gokart_Laptime.Controllers
             }
             catch (Exception)
             {
-                throw;
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["RacersAddedFail"].Value });
+                return RedirectToAction("Details", new { id = raceId });
             }
         }
 
@@ -258,7 +265,7 @@ namespace Gokart_Laptime.Controllers
             
             if (!racerDAO.GetRacersByRaceID(raceId).Any(r => r.RacerId == Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value)))
             {
-                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "You are not added to the racers list" });
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["RacerNotAdded"].Value });
                 return RedirectToAction("Details", new { id = raceId });
             }
 

@@ -17,10 +17,11 @@ namespace Gokart_Laptime.Models
         [Display(Name = "Lap")]
         public int Lap { get; set; }
 
+        [Display(Name = "Laptime")]
         [DisplayFormat(DataFormatString = "{0:mm\\:ss\\.fff}")]
         public TimeSpan LapTime { get; set; }
 
-
+        [Display(Name = "Difference")]
         public TimeSpan Difference(TimeSpan currLaptime, TimeSpan prevLapTime)
         {
             return currLaptime - prevLapTime;

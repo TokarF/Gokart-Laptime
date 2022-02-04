@@ -1,8 +1,9 @@
 ﻿@using System.Security.Claims
 @model Gokart_Laptime.Models.RaceModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 
 @{
-    ViewData["Title"] = "Race Details";
+    ViewData["Title"] = @localizer["Race"];
 }
 
 <div class="col-xl-8 mb-3 mx-auto card bg-dark border-secondary text-light">
@@ -52,11 +53,11 @@
 
 <div class="col-xl-8 mx-auto row justify-content-center mb-3 gap-2 mb-3">
     <div class="col-12 col-sm px-0">
-        <a asp-action="Racers" asp-route-raceId="@Model.RaceId" class="w-100 btn btn-outline-info"><i class="fas fa-plus me-2"></i>Racers</a>
+        <a asp-action="Racers" asp-route-raceId="@Model.RaceId" class="w-100 btn btn-outline-info"><i class="fas fa-plus me-2"></i>@localizer["Racers"]</a>
     </div>
 
     <div class="col-12 col-sm px-0">
-        <a asp-action="Laptimes" asp-route-raceId="@Model.RaceId" class="w-100 @((!Model.Racers.Any(r => r.RacerId == Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value))) ? "disabled" : "") btn btn-outline-success"><i class="fas fa-plus me-2"></i>Laptimes</a>
+        <a asp-action="Laptimes" asp-route-raceId="@Model.RaceId" class="w-100 @((!Model.Racers.Any(r => r.RacerId == Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value))) ? "disabled" : "") btn btn-outline-success"><i class="fas fa-plus me-2"></i>@localizer["Laptimes"]</a>
     </div>
 </div>
 
@@ -75,10 +76,10 @@
                         #
                     </th>
                     <th>
-                        Laptime
+                        @localizer["Laptime"]
                     </th>
                     <th>
-                        Diff.
+                        @localizer["Difference"]
                     </th>
                 </tr>
             </thead>
@@ -146,7 +147,7 @@
 
 <div class="col-xl-8 mx-auto row justify-content-center chart-container card bg-dark border-secondary">
     <div class="card-header bg-danger text-center">
-        <span class="fw-bold fs-5">Laptimes</span>
+        <span class="fw-bold fs-5">@localizer["Laptimes"]</span>
     </div>
      <div class="card-body">
         <canvas id="chart"></canvas>

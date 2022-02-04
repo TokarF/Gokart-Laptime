@@ -1,7 +1,8 @@
 ﻿@model Gokart_Laptime.Models.RaceTrackModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = @localizer["Track"];
 }
 <div class="col-xl-8 mb-3 mx-auto card bg-dark border-secondary text-light">
     <div class="card-header bg-danger">
@@ -55,7 +56,7 @@
     </div>
 </div>
 
-<h2 class="text-md-center mb-3">Races</h2>
+<h2 class="text-md-center mb-3">@localizer["Races"]</h2>
 
 @if (Model.Races.Count() > 0)
 {
@@ -88,7 +89,7 @@
                                 <td class="bg-secondary" colspan="2">@racer.RacerName</td>
                             </tr>
                             <tr>
-                                <td style="width: 1%" class="text-start">Laps</td>
+                                <td style="width: 1%" class="text-start">@localizer["Laps"]</td>
                                 <td class="font-monospace">@racer.Laptimes.Count</td>
                             </tr>
                             <tr>

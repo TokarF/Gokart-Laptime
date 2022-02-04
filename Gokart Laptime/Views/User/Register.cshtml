@@ -1,51 +1,52 @@
 ﻿@model Gokart_Laptime.Models.UserRegisterViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = @localizer["Register"];
 }
 
 <form asp-action="Register" class="row g-2 justify-content-md-center">
-    <div class="col-md-8 col-xl-6">
+    <div class="col-xl-8">
         <label asp-for="UserName" class="mb-2"></label>
-        <input asp-for="UserName" class="form-control mb-2 bg-dark text-white" placeholder="Enter a username">
+        <input asp-for="UserName" class="form-control mb-2 bg-dark text-white" placeholder=@ViewData.ModelMetadata.Placeholder>
         <span asp-validation-for="UserName" class="text-danger"></span>
     </div>
 
     <div class="w-100"></div>
 
-    <div class="col-md-8 col-xl-6">
+    <div class="col-xl-8">
         <label asp-for="Email" class="mb-2"></label>
-        <input asp-for="Email" class="form-control mb-2 bg-dark text-white" placeholder="Enter an email">
+        <input asp-for="Email" class="form-control mb-2 bg-dark text-white" placeholder=@ViewData.ModelMetadata.Placeholder>
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     
     <div class="w-100"></div>
 
-    <div class="col-md-8 col-xl-6">
+    <div class="col-xl-8">
         <label asp-for="Password" class="mb-2"></label>
-        <input asp-for="Password" class="form-control mb-2 bg-dark text-white" placeholder="Enter a password">
+        <input asp-for="Password" class="form-control mb-2 bg-dark text-white" placeholder=@ViewData.ModelMetadata.Placeholder>
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
 
     <div class="w-100"></div>
 
-    <div class="col-md-8 col-xl-6">
+    <div class="col-xl-8">
         <label asp-for="PasswordConfirm" class="mb-2"></label>
-        <input asp-for="PasswordConfirm" class="form-control mb-2 bg-dark text-white" placeholder="Enter password again">
+        <input asp-for="PasswordConfirm" class="form-control mb-2 bg-dark text-white" placeholder=@ViewData.ModelMetadata.Placeholder>
         <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
     </div>
 
     <div class="w-100"></div>
 
-    <div class="col-md-8 col-xl-6">
+    <div class="col-xl-8">
         
-        <button type="submit" class="w-100 btn btn-outline-info"><i class="fas fa-user-plus me-2"></i>Register</button>
+        <button type="submit" class="w-100 btn btn-outline-info"><i class="fas fa-user-plus me-2"></i>@localizer["Register"]</button>
     </div>
 
     <div class="w-100"></div>
 
-    <div class="col-md-8 col-xl-6">
-        <a asp-action="Login" class="w-100 btn btn-outline-success"><i class="fas sign-in-alt me-2"></i>Login</a>
+    <div class="col-xl-8">
+        <a asp-action="Login" class="w-100 btn btn-outline-success"><i class="fas fa-edit me-2"></i>@localizer["Login"]</a>
     </div>
 </form>
 @section Scripts {

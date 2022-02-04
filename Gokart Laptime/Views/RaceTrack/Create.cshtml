@@ -1,14 +1,15 @@
 ﻿@model Gokart_Laptime.Models.RaceTrackModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 
 @{
-    ViewData["Title"] = "New Track";
+    ViewData["Title"] = @localizer["New Track"];
 }
 
 <form asp-action="Create" class="row g-2 justify-content-md-center">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="col-xl-6">
         <label asp-for="RaceTrackName" class="mb-2"></label>
-        <input asp-for="RaceTrackName" class="form-control mb-2 bg-dark text-white" placeholder="Enter the racetrack's name">
+        <input asp-for="RaceTrackName" class="form-control mb-2 bg-dark text-white" placeholder=@ViewData.ModelMetadata.Placeholder>
         <span asp-validation-for="RaceTrackName" class="text-danger"></span>
     </div>
 
@@ -16,7 +17,7 @@
 
     <div class="col-xl-6">
         <label asp-for="Length" class="mb-2"></label>
-        <input asp-for="Length" class="form-control mb-2 bg-dark text-white" placeholder="Enter the racektrack's length">
+        <input asp-for="Length" class="form-control mb-2 bg-dark text-white" placeholder=@ViewData.ModelMetadata.Placeholder>
         <span asp-validation-for="Length" class="text-danger"></span>
     </div>
 
@@ -24,7 +25,7 @@
 
     <div class="col-xl-6">
         <label asp-for="Address" class="mb-2"></label>
-        <input asp-for="Address" class="form-control mb-2 bg-dark text-white" placeholder="Enter the racetrack's address">
+        <input asp-for="Address" class="form-control mb-2 bg-dark text-white" placeholder=@ViewData.ModelMetadata.Placeholder>
         <span asp-validation-for="Address" class="text-danger"></span>
     </div>
 
@@ -32,7 +33,7 @@
 
     <div class="col-xl-6">
         <label asp-for="Description" class="mb-2"></label>
-        <textarea rows="5" asp-for="Description" class="form-control mb-2 bg-dark text-white" placeholder="Enter a description (not mandatory)"></textarea>
+        <textarea rows="5" asp-for="Description" class="form-control mb-2 bg-dark text-white" placeholder=@ViewData.ModelMetadata.Placeholder></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
@@ -40,13 +41,13 @@
 
 
     <div class="col-xl-6">
-        <button type="submit" class="w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>Add Track</button>
+        <button type="submit" class="w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>@localizer["Add Track"]</button>
     </div>
 
     <div class="w-100"></div>
 
     <div class="col-xl-6">
-        <a asp-action="Index" class="w-100 btn btn-outline-info"><i class="fas fa-angle-double-left me-2"></i>Go Back</a>
+        <a asp-action="Index" class="w-100 btn btn-outline-info"><i class="fas fa-angle-double-left me-2"></i>@localizer["Go Back"]</a>
     </div>
 </form>
 

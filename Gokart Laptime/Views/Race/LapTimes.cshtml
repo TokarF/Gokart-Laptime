@@ -1,7 +1,8 @@
 ﻿@model Gokart_Laptime.ViewModels.RaceLaptimesViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 
 @{
-    ViewData["Title"] = "LapTimes";
+    ViewData["Title"] = @localizer["Laptimes"];
 }
 
 
@@ -52,7 +53,7 @@
         <input required type="number" min="0" class="form-control bg-dark text-light" name="msec" placeholder="msec">
     </div>
     <div id="addEditLapDiv" class="col-12 col-sm-3 px-0 mt-2 mt-sm-0">
-        <button onclick="AddNewLap(this)" type="submit" class="w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>Add</button>
+        <button onclick="AddNewLap(this)" type="submit" class="w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>@localizer["Add"]</button>
     </div>
 </div>
 
@@ -65,10 +66,10 @@
             <thead class="bg-danger text-center">
                 <tr>
                     <th>
-                        Lap
+                        @localizer["Lap"]
                     </th>
                     <th>
-                        Laptime
+                        @localizer["Laptime"]
                     </th>
                     <th></th>
                 </tr>
@@ -99,7 +100,7 @@
             <tfoot>
                 <tr class="">
                     <td class="text-center">
-                        Average Laptime
+                        @localizer["Average Laptime"]
                     </td>
                     <td id="averageLap" class="text-center text-warning font-monospace">
                         @((Model.Laptimes.Count() > 0) ? TimeSpan.FromTicks((long)Model.Laptimes.Average(lt => lt.LapTime.Ticks)).ToString(@"mm\:ss\.fff") : "-")
@@ -109,7 +110,7 @@
                 </tr>
                 <tr class="">
                     <td class="text-center">
-                        Best Laptime
+                        @localizer["Best Laptime"]
                     </td>
                     <td id="bestLap" class="text-center text-success font-monospace">
                          @((Model.Laptimes.Count() > 0) ? TimeSpan.FromTicks((long)Model.Laptimes.Min(lt => lt.LapTime.Ticks)).ToString(@"mm\:ss\.fff") : "-")
@@ -124,7 +125,7 @@
 
 
 <div class="col-xl-4 mx-auto">
-    <button type="submit" form="sendLaps" class="w-100 btn btn-outline-danger"><i class="fas fa-save me-2"></i>Save</button>
+    <button type="submit" form="sendLaps" class="w-100 btn btn-outline-danger"><i class="fas fa-save me-2"></i>@localizer["Save"]</button>
 </div>
 
 @section Scripts {
@@ -154,7 +155,7 @@
     let sec = document.querySelector("input[name='sec']");
     let msec = document.querySelector("input[name='msec']");
     let addEditLapDiv = document.querySelector("#addEditLapDiv");
-    let addNewLapBtn = `<button onclick="AddNewLap(this)" type="submit" class="w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>Add</button>`;
+    let addNewLapBtn = `<button onclick="AddNewLap(this)" type="submit" class="w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>@localizer["Add"]</button>`;
 
     window.addEventListener("load", (event) => 
     {
@@ -189,7 +190,7 @@
 
     function EditLap(e)
     {
-        let updateLapBtn = `<button onclick="UpdateLap(this)" data-index="${e.dataset.index}" id="#updateLapBtn"  class="w-100 btn btn-outline-warning"><i class="fas fa-pen me-2"></i>Update</button>`;
+        let updateLapBtn = `<button onclick="UpdateLap(this)" data-index="${e.dataset.index}" id="#updateLapBtn"  class="w-100 btn btn-outline-warning"><i class="fas fa-pen me-2"></i>@localizer["Update"]</button>`;
 
         let d = new Date(Date.UTC(0,0,0,0,0,0,lapTimes[e.dataset.index].lapTime));
         min.value = d.getMinutes();

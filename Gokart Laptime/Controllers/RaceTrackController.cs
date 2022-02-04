@@ -3,6 +3,7 @@ using Gokart_Laptime.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Newtonsoft.Json;
 
 namespace Gokart_Laptime.Controllers
@@ -13,16 +14,19 @@ namespace Gokart_Laptime.Controllers
         private readonly IRaceDAO raceDAO;
         private readonly IRacerDAO racerDAO;
         private readonly ILapTimeDAO lapTimeDAO;
-        public RaceTrackController(IRaceTrackDAO raceTrackDAO, IRaceDAO raceDAO, IRacerDAO racerDAO, ILapTimeDAO lapTimeDAO)
+        private readonly IHtmlLocalizer<RaceTrackController> localizer;
+
+        public RaceTrackController(IRaceTrackDAO raceTrackDAO, IRaceDAO raceDAO, IRacerDAO racerDAO, ILapTimeDAO lapTimeDAO, IHtmlLocalizer<RaceTrackController> localizer)
         {
             this.raceTrackDAO = raceTrackDAO;
             this.raceDAO = raceDAO;
             this.racerDAO = racerDAO;
             this.lapTimeDAO = lapTimeDAO;
+            this.localizer = localizer;
         }
         // GET: RaceTrackController
         [Authorize]
-        public ActionResult Index()
+        public ActionResult Index(string? searchRaceTrack)
         {
 
             try
@@ -30,7 +34,8 @@ namespace Gokart_Laptime.Controllers
                 List<RaceTrackModel> raceTracks = raceTrackDAO.GetAllRaceTracks();
 
                 raceTracks.ForEach(raceTrack => raceTrack.Races = raceTrackDAO.GetRaceTrackRacesById(raceTrack.RaceTrackId));
-                
+
+                if (searchRaceTrack is not null) raceTracks = raceTracks.FindAll(race => race.RaceTrackName.ToLower().Contains(searchRaceTrack));
 
                 ViewBag.Information = TempData["Information"];
                 return View(raceTracks);
@@ -65,7 +70,7 @@ namespace Gokart_Laptime.Controllers
             }
             else
             {
-                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Racetrack is not found!" });
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["RaceTrackNotFound"].Value });
                 return RedirectToAction(nameof(Index));
             }
 
@@ -89,13 +94,13 @@ namespace Gokart_Laptime.Controllers
 
                 if (raceTrackDAO.AddRaceTrack(raceTrack) != -1)
                 {
-                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "RaceTrack has been successfully added!" });
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = localizer["RaceTrackAddSuccess"].Value });
                     return RedirectToAction(nameof(Index));
       
                 }
                 else
                 {
-                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Sorry, something went wrong, couldn't add racetrack!" });
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["RaceTrackAddFail"].Value });
                     return RedirectToAction(nameof(Index));
                 }
 
@@ -116,7 +121,7 @@ namespace Gokart_Laptime.Controllers
             }
             else
             {
-                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Racetrack is not found!" });
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["RaceTrackNotFound"].Value });
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -132,13 +137,13 @@ namespace Gokart_Laptime.Controllers
 
                 if (raceTrackDAO.UpdateRaceTrack(raceTrack))
                 {
-                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "RaceTrack has been successfully updated!" });
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = localizer["RaceTrackUpdateSuccess"].Value });
                     return RedirectToAction(nameof(Index));
 
                 }
                 else
                 {
-                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "Sorry, something went wrong, couldn't update racetrack!" });
+                    TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["RaceTrackUpdateFail"].Value });
                     return RedirectToAction(nameof(Index));
                 }
             }

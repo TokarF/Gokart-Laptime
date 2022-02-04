@@ -1,19 +1,20 @@
 ﻿@model IEnumerable<Gokart_Laptime.Models.RaceModel>
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 
 @{
-    ViewData["Title"] = "Races";
+    ViewData["Title"] = @localizer["Races"];
 }
 
-<form asp-action="Search" class="col-xl-8 row gap-2 mb-3 mx-auto">
+<form asp-action="Index" class="col-xl-8 row gap-2 mb-3 mx-auto">
     <div class="col-12 col-sm px-0">
-        <input class="form-control bg-dark text-white" placeholder="Enter a racetrack name">
+        <input name="searchRaceTrack" class="form-control bg-dark text-white" placeholder="@localizer["Enter Race Track"]">
     </div>
     <div class="col-12 col-sm px-0">
-        <button type="submit" class="w-100 btn btn-outline-info"><i class="fas fa-search me-2"></i>Search</button>
+        <button type="submit" class="w-100 btn btn-outline-info"><i class="fas fa-search me-2"></i>@localizer["Search"]</button>
 
     </div>
     <div class="col-12 col-sm px-0">
-        <a asp-action="Create" class="w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>New</a>
+        <a asp-action="Create" class="w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>@localizer["New Race"]</a>
     </div>
 </form>
 
@@ -69,7 +70,7 @@
 
 else
 {
-    <h2 class="text-center">No racetracks have been added yet!</h2>
+    <h2 class="text-center">@localizer["No Race Found"]</h2>
 }
 
 

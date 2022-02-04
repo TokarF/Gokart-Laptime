@@ -4,27 +4,28 @@ namespace Gokart_Laptime.Models
 {
     public class UserRegisterViewModel
     {
-        [Display(Name = "Username")]
-        [Required(ErrorMessage = "The username is required")]
+        [Display(Name = "Username", Prompt = "UsernamePlaceHolder")]
+        [Required(ErrorMessage = "UsernameRequired")]
         [DataType(DataType.Text)]
-        [StringLength(50, MinimumLength = 8, ErrorMessage = "The username has to be between 8 - 50 charaters")]
+        [StringLength(50, MinimumLength = 8, ErrorMessage = "UsernameLength")]
         public string UserName { get; set; }
 
-        [Display(Name = "Email address")]
-        [Required(ErrorMessage = "The email address is required")]
-        [DataType(DataType.EmailAddress)]
-        [StringLength(50, MinimumLength = 8, ErrorMessage = "The email adress has to be between 8 - 50 charaters")]
+        [Display(Name = "Email address", Prompt = "EmailPlaceHolder")]
+        [RegularExpression(@"^[\w-]+(\.[\w-]+)*@([a-z0-9-]+(\.[a-z0-9-]+)*?\.[a-z]{2,6}|(\d{1,3}\.){3}\d{1,3})(:\d{4})?$", ErrorMessage = "ValidEmail")]
+        [Required(ErrorMessage = "EmailAddressRequired")]
+        [StringLength(50, MinimumLength = 8, ErrorMessage = "EmailAddressLength")]
         public string Email { get; set; }
 
-        [Display(Name = "Password")]
-        [Required(ErrorMessage = "The password is required")]
+        [Display(Name = "Password", Prompt = "PasswordPlaceHolder")]
+        [Required(ErrorMessage = "PasswordRequired")]
         [DataType(DataType.Password)]
-        [StringLength(50, MinimumLength = 8, ErrorMessage = "The password has to be between 8 - 20 charaters")]
+        [StringLength(50, MinimumLength = 8, ErrorMessage = "PasswordLength")]
         public string Password { get; set; }
 
-        [Display(Name = "Password again")]
+        [Display(Name = "Password again", Prompt = "PasswordAgainPlaceHolder")]
+        [Required(ErrorMessage = "PasswordAgainRequired")]
         [DataType(DataType.Password)]
-        [Compare("Password")]
+        [Compare("Password", ErrorMessage = "PasswordsMatch")]
         public string PasswordConfirm { get; set; }
     }
 }

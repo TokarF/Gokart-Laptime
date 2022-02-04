@@ -8,20 +8,20 @@ namespace Gokart_Laptime.Models
         public int UserId { get; set; }
 
         [Display(Name = "Username")]
-        [Required(ErrorMessage = "The username is required")]
+        [Required(ErrorMessage = "UsernameRequired")]
         [DataType(DataType.Text)]
-        [StringLength(50, MinimumLength = 8, ErrorMessage = "The username has to be between 8 - 50 charaters")]
+        [StringLength(50, MinimumLength = 8, ErrorMessage = "UsernameLength")]
         public string UserName { get; set; }
 
         [Display(Name = "Email address")]
-        [Required(ErrorMessage = "The email address is required")]
+        [Required(ErrorMessage = "EmailAddressRequired")]
         [DataType(DataType.EmailAddress)]
-        [StringLength(50, MinimumLength = 8, ErrorMessage = "The email adress has to be between 8 - 50 charaters")]
+        [StringLength(50, MinimumLength = 8, ErrorMessage = "EmailAddressLength")]
         public string Email { get; set; }
         [Display(Name = "Password")]
-        [Required(ErrorMessage = "The password is required")]
+        [Required(ErrorMessage = "PasswordRequired")]
         [DataType(DataType.Password)]
-        [StringLength(50, MinimumLength = 8, ErrorMessage = "The password has to be between 8 - 20 charaters")]
+        [StringLength(50, MinimumLength = 8, ErrorMessage = "PasswordLength")]
         public string Password { get; set; }
 
         [Display(Name = "Registered at")]

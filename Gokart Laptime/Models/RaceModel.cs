@@ -10,24 +10,24 @@ namespace Gokart_Laptime.Models
         public int RaceId { get; set; }
 
         
-        [Display(Name = "RaceTrackID")]
-        [Required(ErrorMessage = "The racetrack is required")]
+        [Display(Name = "RaceTrack")]
+        [Required(ErrorMessage = "RacetrackRequired")]
         public int RaceTrackId { get; set; }
 
         [Display(Name = "Date")]
         [DataType(DataType.Date)]
-        [Required(ErrorMessage = "The race date is required")]
+        [Required(ErrorMessage = "RacedateRequired")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime RaceDate { get; set; }
 
 
-        [Display(Name = "Description")]
+        [Display(Name = "Description", Prompt = "DescriptionPlaceHolder")]
         [DataType(DataType.MultilineText)]
-        [StringLength(300, MinimumLength = 10, ErrorMessage = "The racetrack description has to be between 10 - 300 charaters")]
+        [StringLength(300, MinimumLength = 10, ErrorMessage = "RacetrackDescriptionLength")]
         [DisplayFormat(NullDisplayText = "N/A")]
         public string? Description { get; set; }
 
-        [Display(Name = "Track")]
+        [Display(Name = "RaceTrackName")]
         public string? RaceTrackName { get; set; }
 
         [Display(Name = "Created by")]

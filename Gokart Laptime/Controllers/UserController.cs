@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -14,10 +15,13 @@ namespace Gokart_Laptime.Controllers
     public class UserController : Controller
     {
         private readonly IUserDAO userDAO;
+        private readonly IHtmlLocalizer<UserController> localizer;
+
         // GET: UserController
-        public UserController(IUserDAO userDAO)
+        public UserController(IUserDAO userDAO, IHtmlLocalizer<UserController> localizer)
         {
             this.userDAO = userDAO;
+            this.localizer = localizer;
         }
         public ActionResult Index()
         {
@@ -33,7 +37,7 @@ namespace Gokart_Laptime.Controllers
         // GET: UserController/Register
         public ActionResult Register()
         {
-            if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
+            if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Race");
 
             return View();
         }
@@ -45,9 +49,9 @@ namespace Gokart_Laptime.Controllers
         {
             try
             {
-                if (userDAO.RegisteredEmail(userRegistrationViewModel.Email)) ModelState.AddModelError("Email", "This email address is already in use!");
+                if (userDAO.RegisteredEmail(userRegistrationViewModel.Email)) ModelState.AddModelError("Email", localizer["EmailAddressInUse"].Value);
 
-                if (userDAO.UsernameAlreadyInUse(userRegistrationViewModel.UserName)) ModelState.AddModelError("UserName", "This username is already in use! Please select another one!");
+                if (userDAO.UsernameAlreadyInUse(userRegistrationViewModel.UserName)) ModelState.AddModelError("UserName", localizer["UsernameInUse"].Value);
 
                 if (!ModelState.IsValid) return View(userRegistrationViewModel);
 
@@ -65,7 +69,7 @@ namespace Gokart_Laptime.Controllers
         // GET: UserController/Register
         public ActionResult Login()
         {
-            if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
+            if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Race");
 
             if (!string.IsNullOrEmpty(Request.QueryString.Value)) return RedirectToAction("Login");
 
@@ -83,7 +87,7 @@ namespace Gokart_Laptime.Controllers
 
                 if (user is null || !BCrypt.Net.BCrypt.Verify(userLoginViewModel.Password, user.Password))
                 {
-                    ViewBag.Information = JsonConvert.SerializeObject(new { Type = "danger", Message = "Invalid user credentials!" });
+                    ViewBag.Information = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["InvalidUserCredentials"].Value });
                     return View();
                 }
 
@@ -101,9 +105,9 @@ namespace Gokart_Laptime.Controllers
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         principal,
                         new AuthenticationProperties { IsPersistent = true });
-                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = "Successful login!" });
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = localizer["SuccessfullLogin"].Value });
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Race");
             }
             catch (Exception)
             {
@@ -116,7 +120,7 @@ namespace Gokart_Laptime.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.User = new GenericPrincipal(new GenericIdentity(string.Empty), null);
-            ViewBag.Information = JsonConvert.SerializeObject(new { Type = "info", Message = "Successful logout!" });
+            ViewBag.Information = JsonConvert.SerializeObject(new { Type = "info", Message = localizer["SuccessfulLogout"].Value });
             return View(nameof(Login));
         }
 
@@ -129,8 +133,8 @@ namespace Gokart_Laptime.Controllers
         {
             if (id != Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value))
             {
-                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = "You are not allowed to do that!" });
-                return RedirectToAction("Index", "Home");
+                TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["NotAllowed"].Value });
+                return RedirectToAction("Index", "Race");
             }
 
             UserModel user = userDAO.GetUserDetailsById(id);
@@ -153,7 +157,7 @@ namespace Gokart_Laptime.Controllers
 
             if (!BCrypt.Net.BCrypt.Verify(changePasswordViewModel.CurrentPassword, userPassword))
             {
-                ModelState.AddModelError("CurrentPassword", "The current password is not appropriate");
+                ModelState.AddModelError("CurrentPassword", localizer["CurrentPasswordNotCorrect"].Value);
             }
 
             if (!ModelState.IsValid)

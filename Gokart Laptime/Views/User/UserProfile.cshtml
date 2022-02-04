@@ -1,12 +1,13 @@
 ﻿@model Gokart_Laptime.Models.UserModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer
 
 @{
-    ViewData["Title"] = "User Profile";
+    ViewData["Title"] = @localizer["User Profile"];
 }
 
 <div class="col-xl-8 mb-3 mx-auto card bg-dark border-secondary text-light">
     <div class="card-header bg-danger">
-        <span class="fw-bold fs-5">User Data</span>
+        <span class="fw-bold fs-5">@localizer["User Data"]</span>
     </div>
     <div class="card-body">
         <div class="row g-2 justify-content-md-start">
@@ -32,7 +33,7 @@
                 <span class="fw-bold">@Html.DisplayNameFor(model => model.Password)</span>
             </div>
             <div class="col">
-                <a class="text-light text-decoration-none" asp-controller="User" asp-action="ChangePassword">Change Password</a>
+                <a class="text-light text-decoration-none" asp-controller="User" asp-action="ChangePassword">@localizer["Change Password"]</a>
             </div>
 
             <div class="w-100"></div>
@@ -49,6 +50,6 @@
 
 <div class="col-xl-8 mx-auto row justify-content-center mb-3 gap-2 mb-3">
     <div class="col-12 col-sm px-0">
-        <a asp-controller="Home" asp-action="Index" class="w-100 btn btn-outline-info"><i class="fas fa-angle-double-left me-2"></i>Go Back</a>
+        <a asp-controller="Home" asp-action="Index" class="w-100 btn btn-outline-info"><i class="fas fa-angle-double-left me-2"></i>@localizer["Go Back"]</a>
     </div>
 </div>
