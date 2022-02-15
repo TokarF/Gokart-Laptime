@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Add Racers" xml:space="preserve">
+    <value>Versenyzők hozzáadása</value>
+  </data>
   <data name="No" xml:space="preserve">
     <value>Nem</value>
   </data>
@@ -128,6 +131,9 @@
   </data>
   <data name="RemoveRacerConfirm" xml:space="preserve">
     <value>Valóban törölni szeretnéd a versenyzőt?</value>
+  </data>
+  <data name="SelectRacers" xml:space="preserve">
+    <value>Válassz versenyzőket</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Igen</value>

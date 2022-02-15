@@ -57,6 +57,8 @@ namespace Gokart_Laptime.Controllers
 
                 userDAO.RegisterUser(userRegistrationViewModel);
 
+                ViewBag.Information = JsonConvert.SerializeObject(new { Type = "Success", Message = localizer["RegisterSuccess"].Value });
+
                 return RedirectToAction("Login");
             }
             catch
@@ -136,6 +138,8 @@ namespace Gokart_Laptime.Controllers
                 TempData["Information"] = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["NotAllowed"].Value });
                 return RedirectToAction("Index", "Race");
             }
+            
+            ViewBag.Information = TempData["Information"];
 
             UserModel user = userDAO.GetUserDetailsById(id);
             return View(user);
@@ -165,13 +169,11 @@ namespace Gokart_Laptime.Controllers
                 return View(changePasswordViewModel);
             }
 
-            else
-            {
-                userDAO.UpdatePassword(Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value), changePasswordViewModel);
-            }
 
-            
-            return View();
+            userDAO.UpdatePassword(Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value), changePasswordViewModel);
+
+            TempData["Information"] = JsonConvert.SerializeObject(new { Type = "success", Message = localizer["PasswordChanged"].Value });
+            return RedirectToAction("UserProfile", "User", new { id = Convert.ToInt32(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value) });
         }
     }
 }

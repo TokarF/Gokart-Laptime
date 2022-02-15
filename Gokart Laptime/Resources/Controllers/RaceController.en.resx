@@ -129,8 +129,14 @@
   <data name="RaceAddSuccess" xml:space="preserve">
     <value>Race has been successfully added</value>
   </data>
+  <data name="RacerDeleteFail" xml:space="preserve">
+    <value>Racer with laptimes cannot be deleted</value>
+  </data>
   <data name="RacerNotAdded" xml:space="preserve">
     <value>You are not added to the racers list</value>
+  </data>
+  <data name="RacerRemoved" xml:space="preserve">
+    <value>Racer has been removed</value>
   </data>
   <data name="RacersAddedFail" xml:space="preserve">
     <value>Something went wrong, couldn't add racers</value>

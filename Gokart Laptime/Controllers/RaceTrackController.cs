@@ -55,7 +55,7 @@ namespace Gokart_Laptime.Controllers
 
             if (raceTrack is not null)
             {
-                raceTrack.Races = raceTrackDAO.GetRaceTrackRacesById(raceTrack.RaceTrackId);
+                raceTrack.Races = raceTrackDAO.GetRaceTrackRacesById(raceTrack.RaceTrackId).OrderByDescending(race => race.RaceId).ToList();
                 
                 foreach (var race in raceTrack.Races)
                 {

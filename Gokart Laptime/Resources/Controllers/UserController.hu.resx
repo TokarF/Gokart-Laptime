@@ -121,13 +121,19 @@
     <value>A jelszó nem megfelelő</value>
   </data>
   <data name="EmailAddressInUse" xml:space="preserve">
-    <value>Ez az email cím már használatban van</value>
+    <value>Ez az emailcím már használatban van</value>
   </data>
   <data name="InvalidUserCredentials" xml:space="preserve">
     <value>Hibás belépési adatok</value>
   </data>
   <data name="NotAllowed" xml:space="preserve">
     <value>Ehhez nincs engedélyed</value>
+  </data>
+  <data name="PasswordChanged" xml:space="preserve">
+    <value>Jelszó sikeresen megváltoztatva</value>
+  </data>
+  <data name="RegisterSuccess" xml:space="preserve">
+    <value>Sikeres regisztráció</value>
   </data>
   <data name="SuccessfullLogin" xml:space="preserve">
     <value>Sikeres bejelntkezés</value>

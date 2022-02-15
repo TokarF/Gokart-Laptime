@@ -129,8 +129,14 @@
   <data name="RaceAddSuccess" xml:space="preserve">
     <value>Verseny sikeresen hozzáadva</value>
   </data>
+  <data name="RacerDeleteFail" xml:space="preserve">
+    <value>Versenyző köridővel nem törölhető</value>
+  </data>
   <data name="RacerNotAdded" xml:space="preserve">
     <value>Nem vagy hozzáadva a versenyzőkhöz</value>
+  </data>
+  <data name="RacerRemoved" xml:space="preserve">
+    <value>Versenyző törölve</value>
   </data>
   <data name="RacersAddedFail" xml:space="preserve">
     <value>Valami hiba történt, nem lehetett módosítani a versenyt</value>

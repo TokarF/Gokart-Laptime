@@ -240,12 +240,12 @@ namespace Gokart_Laptime.Controllers
         {
             if (racerDAO.racerHasLaptimes(raceId, racerId))
             {
-                ViewBag.Information = JsonConvert.SerializeObject(new { Type = "danger", Message = "Racer with laptimes cannot be deleted!" });
+                ViewBag.Information = JsonConvert.SerializeObject(new { Type = "danger", Message = localizer["RacerDeleteFail"].Value });
             }
             else
             {
                 racerDAO.RemoveRacer(raceId, racerId);
-                ViewBag.Information = JsonConvert.SerializeObject(new { Type = "success", Message = "Racer has been removed!" });
+                ViewBag.Information = JsonConvert.SerializeObject(new { Type = "success", Message = localizer["RacerRemoved"].Value });
             }
 
             RaceRacersViewModel raceRacersViewModel = new RaceRacersViewModel

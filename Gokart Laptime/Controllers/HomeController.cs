@@ -28,17 +28,6 @@ namespace Gokart_Laptime.Controllers
             return LocalRedirect(returnUrl);
         }
 
-        public IActionResult Index()
-        {
-            ViewBag.Information = TempData["Information"];
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

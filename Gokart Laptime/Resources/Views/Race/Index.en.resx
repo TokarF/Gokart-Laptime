@@ -120,6 +120,9 @@
   <data name="Enter Race Track" xml:space="preserve">
     <value>Enter a racetrack name</value>
   </data>
+  <data name="Laps" xml:space="preserve">
+    <value>Laps</value>
+  </data>
   <data name="New Race" xml:space="preserve">
     <value>New Race</value>
   </data>

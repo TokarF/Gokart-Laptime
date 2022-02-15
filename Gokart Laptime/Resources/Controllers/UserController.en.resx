@@ -129,6 +129,12 @@
   <data name="NotAllowed" xml:space="preserve">
     <value>You are not allowed to do that!</value>
   </data>
+  <data name="PasswordChanged" xml:space="preserve">
+    <value>Password has been successfully changed</value>
+  </data>
+  <data name="RegisterSuccess" xml:space="preserve">
+    <value>Successfull registration</value>
+  </data>
   <data name="SuccessfullLogin" xml:space="preserve">
     <value>Successfull login</value>
   </data>

@@ -120,6 +120,9 @@
   <data name="Enter Race Track" xml:space="preserve">
     <value>Adj meg egy pályanevet</value>
   </data>
+  <data name="Laps" xml:space="preserve">
+    <value>Körök</value>
+  </data>
   <data name="New Race" xml:space="preserve">
     <value>Új Verseny</value>
   </data>

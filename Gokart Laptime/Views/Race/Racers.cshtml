@@ -46,15 +46,15 @@
         <input name="raceId" type="hidden" value="@Model.Race.RaceId" />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="col-md-6 col-xl-4">
-            <select id="selectRacer" name="racersId" class="w-100 border rounded border-secondary selectpicker" multiple="" data-size="10" title="Select racers" data-style="btn-dark bg-dark" aria-label="Default select example" data-dropup-auto="false" tabindex="null">
+            <select id="selectRacer" name="racersId" class="w-100 border rounded border-secondary selectpicker" multiple="" data-size="10" title="@localizer["SelectRacers"]" data-style="btn-dark bg-dark" aria-label="Default select example" data-dropup-auto="false" tabindex="null">
                 @for (var i = 0; i < Model.NotIncludedRacers.Count(); i++)
                 {
-                        <option class="bg-dark text-light" value="@Model.NotIncludedRacers[i].RacerId">@Model.NotIncludedRacers[i].RacerName</option>
+                    <option class="bg-dark text-light" value="@Model.NotIncludedRacers[i].RacerId">@Model.NotIncludedRacers[i].RacerName</option>
                 }
             </select>
         </div>
         <div class="col-md-6 col-xl-4">
-            <button type="submit" @(@Model.NotIncludedRacers.Count == 0 ? "disabled" : "") class="col-sm-4 w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>@localizer["Add Racer"]</button>
+            <button type="submit" @(@Model.NotIncludedRacers.Count == 0 ? "disabled" : "") class="col-sm-4 w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>@localizer["Add Racers"]</button>
         </div>
     </form>
 
@@ -74,17 +74,21 @@
             <tbody class="text-center align-middle">
                 @foreach (var item in Model.IncludedRacers)
                 {
-                        <tr>
-                            <td>
+                    <tr>
+                        <td>
                             @Html.DisplayFor(modelItem => item.RacerId)
-                            </td>
-                            <td>
+                        </td>
+                        <td>
                             @Html.DisplayFor(modelItem => item.RacerName)
-                            </td>
-                            <td>
+                        </td>
+                        <td>
+                            @if (Model.Race.Created_By != item.RacerId)
+                            {
                                 <button onclick="RemoveRacerModal(this)" class="btn btn-outline-danger" data-racerid="@item.RacerId" data-raceid="@item.RaceId" data-bs-toggle="modal" data-bs-target="#removeRacerModal"><i class="fas fa-times"></i></button>
-                            </td>
-                        </tr>
+
+                            }
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -106,32 +110,25 @@
                 <div class="modal-footer text-center">
                     <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">@localizer["No"]</button>
                     <form asp-action="RemoveRacer">
-                        <input type="hidden" name="raceId" value="@Model.Race.RaceId"/>
+                        <input type="hidden" name="raceId" value="@Model.Race.RaceId" />
                         <input type="hidden" name="racerId" />
-                        <button  type="submit" class="btn btn-outline-danger">@localizer["Yes"]</button>
+                        <button type="submit" class="btn btn-outline-danger">@localizer["Yes"]</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        window.addEventListener('load', function() {
-            document.querySelector(".dropdown-menu").classList.add("bg-dark", "border", "border-secondary");
-            $('#selectRacer').selectpicker();
-        });
-    </script>
-
-
 </div>
 
 
 <script>
+    window.addEventListener('load', function() {
+        document.querySelector(".dropdown-menu").classList.add("bg-dark", "border", "border-secondary");
+        $('#selectRacer').selectpicker();
+    });
 
     function RemoveRacerModal(element)
     {
-        console.log(element.getAttribute('data-racerid'));
-        console.log(element.getAttribute('data-raceid'));
         racertoDeleteId = element.getAttribute('data-racerid');
         raceId = element.getAttribute('data-raceid');
         document.querySelector("[name='racerId']").value = element.getAttribute('data-racerid');

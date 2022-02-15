@@ -81,9 +81,9 @@ namespace Gokart_Laptime.Services
                         command.Connection = connection;
                         command.CommandText = "INSERT INTO dbo.Users (username, email, password) VALUES (@username, @email, @password)";
                         connection.Open();
-                        command.Parameters.AddWithValue("username", userRegistrationViewModel.UserName);
-                        command.Parameters.AddWithValue("email", userRegistrationViewModel.Email);
-                        command.Parameters.AddWithValue("password", BCrypt.Net.BCrypt.HashPassword(userRegistrationViewModel.Password));
+                        command.Parameters.AddWithValue("username", userRegistrationViewModel.UserName.Trim());
+                        command.Parameters.AddWithValue("email", userRegistrationViewModel.Email.Trim());
+                        command.Parameters.AddWithValue("password", BCrypt.Net.BCrypt.HashPassword(userRegistrationViewModel.Password.Trim()));
                         command.ExecuteNonQuery();
                     }
                 }

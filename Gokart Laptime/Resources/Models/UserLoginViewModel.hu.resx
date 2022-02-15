@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Email address" xml:space="preserve">
-    <value>Email cím</value>
+    <value>Emailcím</value>
   </data>
   <data name="EmailAddressLength" xml:space="preserve">
-    <value>Az email címnek 8 - 50 karakter között kell lennie</value>
+    <value>Az emailcímnek 8 - 50 karakter között kell lennie</value>
   </data>
   <data name="EmailAddressRequired" xml:space="preserve">
-    <value>Az email cím kötelező</value>
+    <value>Az emailcím kötelező</value>
   </data>
   <data name="EmailPlaceHolder" xml:space="preserve">
     <value>Add meg az emailcímed</value>

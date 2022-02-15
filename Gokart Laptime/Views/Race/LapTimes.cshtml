@@ -91,7 +91,7 @@
                             </td>
                             <td>
                                 <a onclick="EditLap(this)" data-index="@i" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                <a onclick="DeleteLap(this)" data-index="@i" class="btn btn-outline-danger"><i class="fas fa-eraser"></i></a>
+                                <a onclick="DeleteLapModal(this)" data-index="@i" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteLapModal"><i class="fas fa-eraser"></i></a>
                             </td>
                         </tr>
                     }
@@ -113,7 +113,7 @@
                         @localizer["Best Laptime"]
                     </td>
                     <td id="bestLap" class="text-center text-success font-monospace">
-                         @((Model.Laptimes.Count() > 0) ? TimeSpan.FromTicks((long)Model.Laptimes.Min(lt => lt.LapTime.Ticks)).ToString(@"mm\:ss\.fff") : "-")
+                        @((Model.Laptimes.Count() > 0) ? TimeSpan.FromTicks((long)Model.Laptimes.Min(lt => lt.LapTime.Ticks)).ToString(@"mm\:ss\.fff") : "-")
                     </td>
                     <td>
                     </td>
@@ -128,6 +128,26 @@
     <button type="submit" form="sendLaps" class="w-100 btn btn-outline-danger"><i class="fas fa-save me-2"></i>@localizer["Save"]</button>
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="deleteLapModal" tabindex="-1" aria-labelledby="exampleModalCenterTitle" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered text-light">
+        <div class="modal-content  border-secondary bg-dark">
+            <div class="modal-header bg-danger">
+                <h5 class="modal-title" id="exampleModalCenterTitle">@localizer["Remove Lap"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>@localizer["DeleteLapConfirm"]</p>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">@localizer["No"]</button>
+                <button id="deleteLap" onclick="DeleteLap(this)" data-bs-dismiss="modal" data-index="" class="btn btn-outline-danger">@localizer["Yes"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @{
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
@@ -135,9 +155,9 @@
 }
 
 <script>
-    class LapTime 
+    class LapTime
     {
-        constructor({id = 0, lap, lapTime}) 
+        constructor({id = 0, lap, lapTime})
         {
             this.id = id;
             this.lap = lap;
@@ -157,7 +177,7 @@
     let addEditLapDiv = document.querySelector("#addEditLapDiv");
     let addNewLapBtn = `<button onclick="AddNewLap(this)" type="submit" class="w-100 btn btn-outline-success"><i class="fas fa-plus me-2"></i>@localizer["Add"]</button>`;
 
-    window.addEventListener("load", (event) => 
+    window.addEventListener("load", (event) =>
     {
         fillLaptimeList();
     });
@@ -211,13 +231,18 @@
         }
     }
 
+    function DeleteLapModal(element)
+    {
+        document.querySelector("#deleteLap").setAttribute("data-index", element.getAttribute('data-index'));
+
+    }
+
     function DeleteLap(e)
     {
         lapTimes.splice(e.dataset.index, 1);
         ClearInputs();
         RefreshTable();
         addEditLapDiv.innerHTML = addNewLapBtn;
-
     }
 
 
@@ -227,7 +252,7 @@
         let text = "";
         lapTimes.forEach((item, index) =>
         {
-            item.lap = index + 1; 
+            item.lap = index + 1;
             text +=
             `
                 <tr>
@@ -238,7 +263,7 @@
                     <td class="font-monospace" >${msToTime(item.lapTime)}</td>
                     <td>
                         <a onclick="EditLap(this)" data-index="${index}" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                        <a onclick="DeleteLap(this)" data-index="${index}" class="btn btn-outline-danger"><i class="fas fa-eraser"></i></a>
+                        <a onclick="DeleteLapModal(this)" data-bs-toggle="modal" data-bs-target="#deleteLapModal" data-index="${index}" class="btn btn-outline-danger"><i class="fas fa-eraser"></i></a>
                     </td>
                 </tr>
             `
@@ -258,7 +283,7 @@
         let flags = [];
 
         flags[0] = min.reportValidity();
-        flags[1] = sec.reportValidity(); 
+        flags[1] = sec.reportValidity();
         flags[2] = msec.reportValidity();
 
         return flags.every(Boolean);
@@ -271,7 +296,7 @@
         msec.value = "";
     }
 
-    function msToTime(s) 
+    function msToTime(s)
     {
 
         function pad(n, z) {
@@ -287,5 +312,5 @@
 
       return pad(mins) + ':' + pad(secs) + '.' + pad(ms, 3);
     }
-    
+
 </script>

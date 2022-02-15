@@ -44,7 +44,7 @@ namespace Gokart_Laptime.Models
         {
             get
             {
-                if (Races.Count > 0)
+                if (Races is not null)
                 {
 
                     var raceTrackBestLap = (from race in Races

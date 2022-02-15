@@ -23,7 +23,7 @@ namespace Gokart_Laptime.Services
                     using (SqlCommand command = new SqlCommand())
                     {
                         command.Connection = connection;
-                        command.CommandText = "SELECT R.*, RT.name FROM dbo.Races R LEFT JOIN dbo.RaceTracks RT ON RT.id = R.racetrack_id";
+                        command.CommandText = "SELECT R.*, RT.name FROM dbo.Races R LEFT JOIN dbo.RaceTracks RT ON RT.id = R.racetrack_id ORDER BY R.id DESC";
                         connection.Open();
                         using (SqlDataReader reader = command.ExecuteReader())
                         {

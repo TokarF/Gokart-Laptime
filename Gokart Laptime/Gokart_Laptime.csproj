@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="SQLScript\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
@@ -183,13 +184,6 @@
     <EmbeddedResource Update="Resources\Views\RaceTrack\Create.en.resx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Generator>PublicResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Views\Home\Index.en.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Views\Home\Index.hu.resx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Race\Racers.hu.resx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

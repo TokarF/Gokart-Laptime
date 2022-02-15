@@ -126,6 +126,9 @@
   <data name="Best Laptime" xml:space="preserve">
     <value>Best laptime</value>
   </data>
+  <data name="DeleteLapConfirm" xml:space="preserve">
+    <value>Do you really would like to delete the lap?</value>
+  </data>
   <data name="Lap" xml:space="preserve">
     <value>Lap</value>
   </data>
@@ -135,10 +138,19 @@
   <data name="Laptimes" xml:space="preserve">
     <value>Laptimes</value>
   </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Remove Lap" xml:space="preserve">
+    <value>Remove Lap</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>
   <data name="Update" xml:space="preserve">
-    <value>Módosít</value>
+    <value>Update</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
   </data>
 </root>
